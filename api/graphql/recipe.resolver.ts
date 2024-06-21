@@ -3,11 +3,14 @@ import { Recipe, RecipeInput, RecipeFilters } from "./recipe.type";
 
 import { RecipeModel } from "../models";
 import { GraphQLError } from "graphql";
-import { prepareRecipeInputForDb } from "./utils";
+import {
+  DBResult,
+  prepareDataForClient,
+  prepareRecipeInputForDb,
+} from "./utils";
 
 interface filterCondition {
   name?: { contains: string };
-  ingredientNames?: { in: string[] };
 }
 
 @Resolver(Recipe)
@@ -22,14 +25,19 @@ export default class RecipeResolver {
       if (search) {
         condition.name = { contains: search };
       }
-
-      if (ingredients?.length > 0) {
-        condition.ingredientNames = { in: ingredients };
-      }
-
       const queryResult = await RecipeModel.scan(condition).exec();
+      const results = queryResult.toJSON();
 
-      return queryResult.toJSON();
+      const resultsFilteredByIngredients =
+        ingredients?.length > 0
+          ? results.filter((result) =>
+              ingredients.every((ingredient) =>
+                result.ingredientNames.includes(ingredient)
+              )
+            )
+          : results;
+
+      return prepareDataForClient(resultsFilteredByIngredients as DBResult[]);
     } catch (err) {
       console.log(err);
       throw new GraphQLError("Unable to retreive recipes.");
