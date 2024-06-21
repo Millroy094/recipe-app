@@ -1,39 +1,62 @@
+import "reflect-metadata";
+
 import { json, urlencoded } from "body-parser";
 import cors from "cors";
-import express, { Request, Response } from "express";
+import http from "http";
+import express from "express";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
+
+import dynamoose from "dynamoose";
+import schema from "./graphql";
 
 const app = express();
 
 export class Application {
   constructor() {
-    this.setupApplicationSettings();
-    this.setupControllers();
+    this.setupDatabase();
+    this.setupApplicationSetting();
+    this.setupGraphQL();
   }
 
-  setupApplicationSettings() {
+  setupDatabase() {
+    const ddb = new dynamoose.aws.ddb.DynamoDB({
+      endpoint: "http://dynamodb:8000",
+      credentials: {
+        accessKeyId: "LOCAL",
+        secretAccessKey: "LOCAL",
+      },
+      region: "local",
+    });
+    dynamoose.aws.ddb.set(ddb);
+  }
+
+  setupApplicationSetting() {
     app.use(cors());
     app.use(urlencoded({ extended: false }));
     app.use(json());
   }
 
-  listen() {
-    app.listen(3080, () => console.log("Listening on port 3080"));
+  async setupGraphQL() {
+    const httpServer = http.createServer(app);
+
+    const server = new ApolloServer({
+      schema,
+      plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer }),
+        ApolloServerPluginLandingPageGraphQLPlayground(),
+      ],
+    });
+
+    await server.start();
+
+    app.use("/graphql", expressMiddleware(server));
   }
 
-  setupControllers() {
-    app.get("/recipes", (req: Request, res: Response) => {
-      res.status(200).send("");
-    });
-    app.get("/recipes/:id", (req: Request, res: Response) => {
-      res.status(200).send("");
-    });
-    app.post("/recipes", (req: Request, res: Response) => {
-      res.status(200).send("");
-    });
-    app.delete("/recipes/:id", (req: Request, res: Response) => {
-      res.status(200).send("");
-    });
-    app;
+  listen() {
+    app.listen(3080, () => console.log("Listening on port 3080"));
   }
 }
 

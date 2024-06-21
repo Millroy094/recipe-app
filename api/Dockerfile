@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:20.11
 
 WORKDIR /usr/src/app/api
 
