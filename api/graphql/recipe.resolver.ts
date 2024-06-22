@@ -39,6 +39,20 @@ export default class RecipeResolver {
       throw new GraphQLError("Unable to retrieve recipes.");
     }
   }
+
+  @Query(() => Recipe)
+  async getRecipe(@Arg("recipeId") recipeId: string): Promise<Recipe> {
+    try {
+      const recipe = await RecipeModel.get(recipeId);
+
+      const { id, name, steps, ingredients, ingredientNames } = recipe;
+      return { id, name, steps, ingredients, ingredientNames };
+    } catch (err) {
+      console.log(err);
+      throw new GraphQLError("Unable to update recipe.");
+    }
+  }
+
   @Mutation(() => Boolean)
   async addRecipe(
     @Arg("recipeInput") recipeInput: RecipeInput
