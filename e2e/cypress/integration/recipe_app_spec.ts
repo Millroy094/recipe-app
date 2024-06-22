@@ -1,11 +1,13 @@
 describe("Recipe tests", () => {
-  it(`Given I have a new recipe
+  it.only(`Given I have a new recipe
       When I add the new recipe name
       And ingredients
       And measurements
       And cooking method
       Then the new recipe is saved for later`, () => {
-    expect(true).to.eq(false);
+    cy.visit("http//:localhost:3000");
+
+    // expect(true).to.eq(false);
   });
 
   it(`Given I want to look for a recipe

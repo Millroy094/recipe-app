@@ -127,6 +127,7 @@ export const Home = () => {
                     </InputLabel>
                     <Select
                       labelId="filter-by-ingredients-label"
+                      label="Filter by Ingredients"
                       variant="outlined"
                       fullWidth
                       multiple

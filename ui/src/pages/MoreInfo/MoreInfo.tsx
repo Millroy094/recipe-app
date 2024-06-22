@@ -392,6 +392,7 @@ const MoreInfo = () => {
                             <Select
                               name={`${index}_unit`}
                               labelId="unit-select-label"
+                              label="Units"
                               variant="outlined"
                               fullWidth
                               value={ingredient.unit}
