@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionActions,
@@ -17,24 +18,23 @@ import {
   SelectChangeEvent,
   TextField,
   Typography,
-} from "@mui/material";
-import { v4 as uuidv4 } from "uuid";
-import isEmpty from "lodash/isEmpty";
+} from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
+import isEmpty from 'lodash/isEmpty';
 
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
-import { useNavigate, useParams } from "react-router-dom";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useNavigate, useParams } from 'react-router-dom';
+import { useLazyQuery, useMutation } from '@apollo/client';
 
-import getRecipeQuery from "../../gql/queries/get-recipe";
-import updateRecipeMutation from "../../gql/mutations/update-recipe";
-import addRecipeMutation from "../../gql/mutations/add-recipe";
+import getRecipeQuery from '../../gql/queries/get-recipe';
+import updateRecipeMutation from '../../gql/mutations/update-recipe';
+import addRecipeMutation from '../../gql/mutations/add-recipe';
 
-import { useEffect, useState } from "react";
-import { UNITS } from "../../constants/units";
+import { UNITS } from '../../constants/units';
 
 interface Ingredient {
   id: string;
@@ -61,18 +61,18 @@ interface FormErrors {
   steps: Record<string, string>;
 }
 
-const initialFormState = { id: "", name: "", ingredients: [], steps: [] };
-const initialFormErrorState = { name: "", ingredients: {}, steps: {} };
+const initialFormState = { id: '', name: '', ingredients: [], steps: [] };
+const initialFormErrorState = { name: '', ingredients: {}, steps: {} };
 
 const MoreInfo = () => {
   const [form, setForm] = useState<Recipe>(initialFormState);
   const [formErrors, setFormErrors] = useState<FormErrors>(
-    initialFormErrorState
+    initialFormErrorState,
   );
 
   const { id } = useParams();
 
-  const isNew = id === "NEW";
+  const isNew = id === 'NEW';
 
   const navigate = useNavigate();
 
@@ -101,7 +101,7 @@ const MoreInfo = () => {
             (ingredient: { name: string; measure: string; unit: string }) => ({
               ...ingredient,
               id: uuidv4(),
-            })
+            }),
           ),
         ],
 
@@ -123,13 +123,13 @@ const MoreInfo = () => {
   };
 
   const handleAddStep = () => {
-    setForm({ ...form, steps: [...form.steps, { id: uuidv4(), step: "" }] });
+    setForm({ ...form, steps: [...form.steps, { id: uuidv4(), step: '' }] });
   };
 
   const handleRemoveStep = (index: number) => {
     setForm({
       ...form,
-      steps: form.steps.filter((step, i) => i !== index),
+      steps: form.steps.filter((step: Step, i: number) => i !== index),
     });
   };
 
@@ -141,7 +141,7 @@ const MoreInfo = () => {
 
       setForm({
         ...form,
-        steps: form.steps.map((step, i) => {
+        steps: form.steps.map((step: Step, i: number) => {
           if (index === i) {
             return previousStep;
           } else if (index - 1 === i) {
@@ -161,7 +161,7 @@ const MoreInfo = () => {
 
       setForm({
         ...form,
-        steps: form.steps.map((step, i) => {
+        steps: form.steps.map((step: Step, i: number) => {
           if (index === i) {
             return nextStep;
           } else if (index + 1 === i) {
@@ -176,11 +176,11 @@ const MoreInfo = () => {
 
   const handleStepOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const [index] = name.split("_");
+    const [index] = name.split('_');
     setForm({
       ...form,
-      steps: form.steps.map((step, i) =>
-        i === parseInt(index) ? { ...step, step: value } : step
+      steps: form.steps.map((step: Step, i: number) =>
+        i === parseInt(index) ? { ...step, step: value } : step,
       ),
     });
   };
@@ -190,7 +190,7 @@ const MoreInfo = () => {
       ...form,
       ingredients: [
         ...form.ingredients,
-        { id: uuidv4(), name: "", measure: "", unit: "" },
+        { id: uuidv4(), name: '', measure: '', unit: '' },
       ],
     });
   };
@@ -198,30 +198,32 @@ const MoreInfo = () => {
   const handleRemoveIngredient = (index: number) => {
     setForm({
       ...form,
-      ingredients: form.ingredients.filter((ingredients, i) => i !== index),
+      ingredients: form.ingredients.filter(
+        (ingredient: Ingredient, i: number) => i !== index,
+      ),
     });
   };
 
   const handleIngredientOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const [index, fieldName] = name.split("_");
+    const [index, fieldName] = name.split('_');
     setForm({
       ...form,
-      ingredients: form.ingredients.map((ingredient, i) =>
+      ingredients: form.ingredients.map((ingredient: Ingredient, i: number) =>
         i === parseInt(index)
           ? { ...ingredient, [fieldName]: value }
-          : ingredient
+          : ingredient,
       ),
     });
   };
 
   const handleIngredientUnitOnChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
-    const [index] = name.split("_");
+    const [index] = name.split('_');
     setForm({
       ...form,
-      ingredients: form.ingredients.map((ingredient, i) =>
-        i === parseInt(index) ? { ...ingredient, unit: value } : ingredient
+      ingredients: form.ingredients.map((ingredient: Ingredient, i: number) =>
+        i === parseInt(index) ? { ...ingredient, unit: value } : ingredient,
       ),
     });
   };
@@ -231,43 +233,43 @@ const MoreInfo = () => {
     const errors: FormErrors = { ...initialFormErrorState };
 
     if (isEmpty(form.name)) {
-      errors.name = "Required";
+      errors.name = 'Required';
       hasErrors = true;
     }
 
     if (!isEmpty(form.ingredients)) {
-      form.ingredients.forEach((ingredient, index) => {
+      form.ingredients.forEach((ingredient: Ingredient, index: number) => {
         if (isEmpty(ingredient.name)) {
-          errors.ingredients[`ingredient_${index}_name`] = "Required";
+          errors.ingredients[`ingredient_${index}_name`] = 'Required';
           hasErrors = true;
         }
         if (isEmpty(ingredient.measure)) {
-          errors.ingredients[`ingredient_${index}_measure`] = "Required";
+          errors.ingredients[`ingredient_${index}_measure`] = 'Required';
           hasErrors = true;
         } else if (!/^[\d/.]+$/.test(ingredient.measure)) {
-          errors.ingredients[`ingredient_${index}_measure`] = "Invalid entry";
+          errors.ingredients[`ingredient_${index}_measure`] = 'Invalid entry';
           hasErrors = true;
         }
         if (isEmpty(ingredient.unit)) {
-          errors.ingredients[`ingredient_${index}_measure`] = "Required";
+          errors.ingredients[`ingredient_${index}_measure`] = 'Required';
           hasErrors = true;
         }
       });
     } else {
-      errors.ingredients["ingredients"] =
-        "You need to enter at least one ingredient";
+      errors.ingredients['ingredients'] =
+        'You need to enter at least one ingredient';
       hasErrors = true;
     }
 
     if (!isEmpty(form.steps)) {
-      form.steps.forEach((step, index) => {
+      form.steps.forEach((step: Step, index: number) => {
         if (!step.step) {
-          errors.steps[`step_${index}`] = "Required";
+          errors.steps[`step_${index}`] = 'Required';
           hasErrors = true;
         }
       });
     } else {
-      errors.steps["steps"] = "You need to enter at least one step";
+      errors.steps['steps'] = 'You need to enter at least one step';
       hasErrors = true;
     }
 
@@ -290,9 +292,9 @@ const MoreInfo = () => {
             name,
             measure,
             unit,
-          })
+          }),
         ),
-        steps: [...form.steps.map((step) => step.step)],
+        steps: [...form.steps.map((step: Step) => step.step)],
       };
 
       if (isNew) {
@@ -312,16 +314,16 @@ const MoreInfo = () => {
   const { name, ingredients, steps } = form;
 
   return (
-    <Container maxWidth="lg" sx={{ p: 2 }}>
+    <Container maxWidth='lg' sx={{ p: 2 }}>
       <Card sx={{ p: 2 }}>
-        <Grid container spacing={2} direction="column">
+        <Grid container spacing={2} direction='column'>
           <Grid item>
             <TextField
-              label="Recipe Name"
+              label='Recipe Name'
               fullWidth
               value={name}
               error={!!formErrors.name}
-              helperText={formErrors.name ?? ""}
+              helperText={formErrors.name ?? ''}
               onChange={onChangeName}
             />
           </Grid>
@@ -329,119 +331,121 @@ const MoreInfo = () => {
             <Accordion defaultExpanded>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1-content"
-                id="panel1-header"
+                aria-controls='panel1-content'
+                id='panel1-header'
               >
-                <Grid container direction="column">
-                  <Typography variant="h6">Ingredients</Typography>
-                  {formErrors.ingredients["ingredients"] && (
-                    <Typography variant="subtitle1" color="error">
-                      {formErrors.ingredients["ingredients"]}
+                <Grid container direction='column'>
+                  <Typography variant='h6'>Ingredients</Typography>
+                  {formErrors.ingredients['ingredients'] && (
+                    <Typography variant='subtitle1' color='error'>
+                      {formErrors.ingredients['ingredients']}
                     </Typography>
                   )}
                 </Grid>
               </AccordionSummary>
               <AccordionDetails>
                 {ingredients?.length > 0 ? (
-                  <Grid container direction="column" spacing={2}>
-                    {ingredients.map((ingredient, index) => (
-                      <Grid container item key={ingredient.id} spacing={2}>
-                        <Grid item xs={6}>
-                          <TextField
-                            name={`${index}_name`}
-                            label="Name"
-                            value={ingredient.name}
-                            fullWidth
-                            onChange={handleIngredientOnChange}
-                            error={
-                              !!formErrors.ingredients[
-                                `ingredient_${index}_name`
-                              ]
-                            }
-                            helperText={
-                              formErrors.ingredients[
-                                `ingredient_${index}_name`
-                              ] ?? ""
-                            }
-                          />
-                        </Grid>
-                        <Grid item xs={4}>
-                          <TextField
-                            name={`${index}_measure`}
-                            label="Measure"
-                            value={ingredient.measure}
-                            fullWidth
-                            onChange={handleIngredientOnChange}
-                            error={
-                              !!formErrors.ingredients[
-                                `ingredient_${index}_measure`
-                              ]
-                            }
-                            helperText={
-                              formErrors.ingredients[
-                                `ingredient_${index}_measure`
-                              ] ?? ""
-                            }
-                          />
-                        </Grid>
-                        <Grid item xs={1}>
-                          <FormControl fullWidth>
-                            <InputLabel id="unit-select-label">
-                              Units
-                            </InputLabel>
-                            <Select
-                              name={`${index}_unit`}
-                              labelId="unit-select-label"
-                              label="Units"
-                              variant="outlined"
+                  <Grid container direction='column' spacing={2}>
+                    {ingredients.map(
+                      (ingredient: Ingredient, index: number) => (
+                        <Grid container item key={ingredient.id} spacing={2}>
+                          <Grid item xs={6}>
+                            <TextField
+                              name={`${index}_name`}
+                              label='Name'
+                              value={ingredient.name}
                               fullWidth
-                              value={ingredient.unit}
-                              onChange={handleIngredientUnitOnChange}
+                              onChange={handleIngredientOnChange}
                               error={
                                 !!formErrors.ingredients[
-                                  `ingredient_${index}_unit`
+                                  `ingredient_${index}_name`
                                 ]
                               }
-                            >
-                              {UNITS.map((option) => (
-                                <MenuItem key={option} value={option}>
-                                  {option}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                            {formErrors.ingredients[
-                              `ingredient_${index}_unit`
-                            ] && (
-                              <FormHelperText>
-                                {
-                                  formErrors.ingredients[
+                              helperText={
+                                formErrors.ingredients[
+                                  `ingredient_${index}_name`
+                                ] ?? ''
+                              }
+                            />
+                          </Grid>
+                          <Grid item xs={4}>
+                            <TextField
+                              name={`${index}_measure`}
+                              label='Measure'
+                              value={ingredient.measure}
+                              fullWidth
+                              onChange={handleIngredientOnChange}
+                              error={
+                                !!formErrors.ingredients[
+                                  `ingredient_${index}_measure`
+                                ]
+                              }
+                              helperText={
+                                formErrors.ingredients[
+                                  `ingredient_${index}_measure`
+                                ] ?? ''
+                              }
+                            />
+                          </Grid>
+                          <Grid item xs={1}>
+                            <FormControl fullWidth>
+                              <InputLabel id='unit-select-label'>
+                                Units
+                              </InputLabel>
+                              <Select
+                                name={`${index}_unit`}
+                                labelId='unit-select-label'
+                                label='Units'
+                                variant='outlined'
+                                fullWidth
+                                value={ingredient.unit}
+                                onChange={handleIngredientUnitOnChange}
+                                error={
+                                  !!formErrors.ingredients[
                                     `ingredient_${index}_unit`
                                   ]
                                 }
-                              </FormHelperText>
-                            )}
-                          </FormControl>
+                              >
+                                {UNITS.map((option) => (
+                                  <MenuItem key={option} value={option}>
+                                    {option}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                              {formErrors.ingredients[
+                                `ingredient_${index}_unit`
+                              ] && (
+                                <FormHelperText>
+                                  {
+                                    formErrors.ingredients[
+                                      `ingredient_${index}_unit`
+                                    ]
+                                  }
+                                </FormHelperText>
+                              )}
+                            </FormControl>
+                          </Grid>
+                          <Grid container item xs={1} justifyContent='center'>
+                            <IconButton
+                              onClick={() => handleRemoveIngredient(index)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Grid>
                         </Grid>
-                        <Grid container item xs={1} justifyContent="center">
-                          <IconButton
-                            onClick={() => handleRemoveIngredient(index)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Grid>
-                      </Grid>
-                    ))}
+                      ),
+                    )}
                   </Grid>
                 ) : (
-                  <Typography variant="inherit">
+                  <Typography variant='inherit'>
                     "Please press the add button to add ingredients"
                   </Typography>
                 )}
               </AccordionDetails>
               <AccordionActions>
                 <Button
-                  variant="contained"
-                  color="success"
+                  variant='contained'
+                  color='success'
                   onClick={handleAddIngredient}
                 >
                   Add Ingredient
@@ -453,22 +457,22 @@ const MoreInfo = () => {
             <Accordion defaultExpanded>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1-content"
-                id="panel1-header"
+                aria-controls='panel1-content'
+                id='panel1-header'
               >
-                <Grid container direction="column">
-                  <Typography variant="h6">Steps</Typography>
-                  {formErrors.steps["steps"] && (
-                    <Typography variant="subtitle1" color="error">
-                      {formErrors.steps["steps"]}
+                <Grid container direction='column'>
+                  <Typography variant='h6'>Steps</Typography>
+                  {formErrors.steps['steps'] && (
+                    <Typography variant='subtitle1' color='error'>
+                      {formErrors.steps['steps']}
                     </Typography>
                   )}
                 </Grid>
               </AccordionSummary>
               <AccordionDetails>
                 {steps?.length > 0 ? (
-                  <Grid container direction="column" spacing={2}>
-                    {steps.map((step, index) => (
+                  <Grid container direction='column' spacing={2}>
+                    {steps.map((step: Step, index: number) => (
                       <Grid key={step.id} container item>
                         <Grid item xs={10}>
                           <TextField
@@ -478,10 +482,10 @@ const MoreInfo = () => {
                             fullWidth
                             onChange={handleStepOnChange}
                             error={!!formErrors.steps[`step_${index}`]}
-                            helperText={formErrors.steps[`step_${index}`] ?? ""}
+                            helperText={formErrors.steps[`step_${index}`] ?? ''}
                           />
                         </Grid>
-                        <Grid container item xs={2} justifyContent="center">
+                        <Grid container item xs={2} justifyContent='center'>
                           <IconButton
                             onClick={() => handleMoveStepUp(index)}
                             disabled={index === 0}
@@ -502,15 +506,15 @@ const MoreInfo = () => {
                     ))}
                   </Grid>
                 ) : (
-                  <Typography variant="inherit">
+                  <Typography variant='inherit'>
                     Please press the add button to add a step
                   </Typography>
                 )}
               </AccordionDetails>
               <AccordionActions>
                 <Button
-                  variant="contained"
-                  color="success"
+                  variant='contained'
+                  color='success'
                   onClick={handleAddStep}
                 >
                   Add Step
@@ -520,18 +524,18 @@ const MoreInfo = () => {
           </Grid>
         </Grid>
         <Divider sx={{ mt: 2, mb: 2 }} />
-        <Grid container spacing={2} justifyContent="flex-end">
+        <Grid container spacing={2} justifyContent='flex-end'>
           <Grid item>
             <Button
-              variant="contained"
-              color="secondary"
+              variant='contained'
+              color='secondary'
               onClick={() => navigateToHome()}
             >
               Go back
             </Button>
           </Grid>
           <Grid item>
-            <Button variant="contained" color="success" onClick={onSubmit}>
+            <Button variant='contained' color='success' onClick={onSubmit}>
               Save
             </Button>
           </Grid>

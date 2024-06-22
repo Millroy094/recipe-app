@@ -13,12 +13,12 @@ import {
   SelectChangeEvent,
   TextField,
   Typography,
-} from "@mui/material";
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import getRecipesQuery from "../../gql/queries/get-recipes";
-import removeRecipeQuery from "../../gql/mutations/remove-recipe";
+} from '@mui/material';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import getRecipesQuery from '../../gql/queries/get-recipes';
+import removeRecipeQuery from '../../gql/mutations/remove-recipe';
 
 interface RecipeListing {
   id: string;
@@ -29,9 +29,9 @@ interface RecipeListing {
 export const Home = () => {
   const [recipes, setRecipes] = useState([]);
   const [ingredientOptions, setIngredientOptions] = useState([]);
-  const [searchString, setSearchString] = useState("");
+  const [searchString, setSearchString] = useState('');
   const [ingredientsToFilterBy, setIngredientsToFilterBy] = useState<string[]>(
-    []
+    [],
   );
 
   const [getRecipes, { loading, data }] = useLazyQuery(getRecipesQuery);
@@ -60,7 +60,7 @@ export const Home = () => {
   const onRemove = async (recipeId: string) => {
     await removeRecipe({ variables: { recipeId } });
     setRecipes(
-      recipes.filter((recipe: RecipeListing) => recipe.id !== recipeId)
+      recipes.filter((recipe: RecipeListing) => recipe.id !== recipeId),
     );
   };
 
@@ -77,8 +77,8 @@ export const Home = () => {
           (ingredients: string[], recipe: RecipeListing) => [
             ...new Set(ingredients.concat(recipe.ingredientNames)),
           ],
-          []
-        )
+          [],
+        ),
       );
 
       setRecipes(getRecipes);
@@ -89,31 +89,31 @@ export const Home = () => {
     return (
       <Box
         sx={{
-          width: "100%",
-          height: "1000px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          width: '100%',
+          height: '1000px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <CircularProgress color="success" />
+        <CircularProgress color='success' />
       </Box>
     );
   }
 
   return (
-    <Container maxWidth="lg">
-      <Grid container direction="column" spacing={2}>
-        <Grid container item justifyContent="center">
-          <Typography variant="h4">My Favorite Recipes</Typography>
+    <Container maxWidth='lg'>
+      <Grid container direction='column' spacing={2}>
+        <Grid container item justifyContent='center'>
+          <Typography variant='h4'>My Favorite Recipes</Typography>
         </Grid>
         <Grid item>
           <Card sx={{ p: 2 }}>
             <Grid container spacing={2}>
               <Grid item xs={3}>
                 <TextField
-                  label="Search by recipe name"
-                  variant="outlined"
+                  label='Search by recipe name'
+                  variant='outlined'
                   fullWidth
                   onChange={onSearchChange}
                   value={searchString}
@@ -122,13 +122,13 @@ export const Home = () => {
               {ingredientOptions.length > 0 && (
                 <Grid item xs={4}>
                   <FormControl fullWidth>
-                    <InputLabel id="filter-by-ingredients-label">
+                    <InputLabel id='filter-by-ingredients-label'>
                       Filter by Ingredients
                     </InputLabel>
                     <Select
-                      labelId="filter-by-ingredients-label"
-                      label="Filter by Ingredients"
-                      variant="outlined"
+                      labelId='filter-by-ingredients-label'
+                      label='Filter by Ingredients'
+                      variant='outlined'
                       fullWidth
                       multiple
                       value={ingredientsToFilterBy}
@@ -144,19 +144,19 @@ export const Home = () => {
                 </Grid>
               )}
             </Grid>
-            <Grid container justifyContent="flex-end" spacing={1}>
+            <Grid container justifyContent='flex-end' spacing={1}>
               <Grid item>
                 <Button
-                  variant="contained"
-                  size="large"
-                  color="success"
-                  onClick={() => navigateToRecipePage("NEW")}
+                  variant='contained'
+                  size='large'
+                  color='success'
+                  onClick={() => navigateToRecipePage('NEW')}
                 >
                   Add Recipe
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant="contained" size="large" onClick={onSearch}>
+                <Button variant='contained' size='large' onClick={onSearch}>
                   Search
                 </Button>
               </Grid>
@@ -166,17 +166,17 @@ export const Home = () => {
         <Grid item>
           <Card sx={{ p: 2 }}>
             {recipes?.length > 0 ? (
-              <Grid container direction="column" spacing={2}>
+              <Grid container direction='column' spacing={2}>
                 {recipes.map((recipe: RecipeListing) => (
                   <Grid item key={recipe.id}>
                     <Card sx={{ p: 2 }}>
-                      <Grid container direction="column" spacing={1}>
+                      <Grid container direction='column' spacing={1}>
                         <Grid item>
-                          <Typography variant="h6">{`Recipe Name: ${recipe.name}`}</Typography>
+                          <Typography variant='h6'>{`Recipe Name: ${recipe.name}`}</Typography>
                         </Grid>
-                        <Grid item container spacing={1} alignItems="center">
+                        <Grid item container spacing={1} alignItems='center'>
                           <Grid item>
-                            <Typography variant="body1">
+                            <Typography variant='body1'>
                               Ingredients:
                             </Typography>
                           </Grid>
@@ -184,8 +184,8 @@ export const Home = () => {
                             <Grid key={ingredientName} item>
                               <Chip
                                 label={ingredientName}
-                                variant="outlined"
-                                size="small"
+                                variant='outlined'
+                                size='small'
                               />
                             </Grid>
                           ))}
@@ -194,13 +194,13 @@ export const Home = () => {
                         <Grid
                           container
                           item
-                          justifyContent="flex-end"
+                          justifyContent='flex-end'
                           spacing={1}
                         >
                           <Grid item>
                             <Button
-                              variant="contained"
-                              color="primary"
+                              variant='contained'
+                              color='primary'
                               onClick={() => navigateToRecipePage(recipe.id)}
                             >
                               View Recipe
@@ -208,8 +208,8 @@ export const Home = () => {
                           </Grid>
                           <Grid item>
                             <Button
-                              variant="contained"
-                              color="error"
+                              variant='contained'
+                              color='error'
                               onClick={() => onRemove(recipe.id)}
                             >
                               Delete Recipe

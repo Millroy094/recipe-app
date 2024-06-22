@@ -49,7 +49,7 @@ export default class RecipeResolver {
       return { id, name, steps, ingredients, ingredientNames };
     } catch (err) {
       console.log(err);
-      throw new GraphQLError("Unable to update recipe.");
+      throw new GraphQLError("Unable to retrieve recipe.");
     }
   }
 
