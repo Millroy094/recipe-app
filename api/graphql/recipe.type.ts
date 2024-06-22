@@ -22,6 +22,9 @@ export class Recipe {
   ingredients: Ingredients[];
 
   @Field((type) => [String])
+  ingredientNames: String[];
+
+  @Field((type) => [String])
   steps: string[];
 }
 

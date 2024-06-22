@@ -3,11 +3,7 @@ import { Recipe, RecipeInput, RecipeFilters } from "./recipe.type";
 
 import { RecipeModel } from "../models";
 import { GraphQLError } from "graphql";
-import {
-  DBResult,
-  prepareDataForClient,
-  prepareRecipeInputForDb,
-} from "./utils";
+import { prepareRecipeInputForDb } from "./utils";
 
 interface filterCondition {
   name?: { contains: string };
@@ -37,10 +33,10 @@ export default class RecipeResolver {
             )
           : results;
 
-      return prepareDataForClient(resultsFilteredByIngredients as DBResult[]);
+      return resultsFilteredByIngredients;
     } catch (err) {
       console.log(err);
-      throw new GraphQLError("Unable to retreive recipes.");
+      throw new GraphQLError("Unable to retrieve recipes.");
     }
   }
   @Mutation(() => Boolean)

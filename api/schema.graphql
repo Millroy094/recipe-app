@@ -27,6 +27,7 @@ type Query {
 
 type Recipe {
   id: ID!
+  ingredientNames: [String!]!
   ingredients: [Ingredients!]!
   name: String!
   steps: [String!]!

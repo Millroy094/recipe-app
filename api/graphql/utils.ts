@@ -47,25 +47,3 @@ export const prepareRecipeInputForDb = ({
 
   return serializedRecipeInput;
 };
-
-export interface DBResult extends RecipeInput {
-  ingredientNames: string[];
-  updatedAt: Date;
-  createdAt: Date;
-}
-
-export const prepareDataForClient = (results: DBResult[]) =>
-  results.map((result: DBResult) => {
-    const { id, name, ingredients, steps, updatedAt, createdAt } = result;
-
-    const output = {
-      id,
-      name,
-      ingredients,
-      steps,
-      createdAt,
-      updatedAt,
-    };
-
-    return output;
-  });
