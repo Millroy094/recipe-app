@@ -9,6 +9,9 @@
 /coverage
 e2e/cypress/videos
 
+# docker volumes
+/docker
+
 # production
 /build
 
