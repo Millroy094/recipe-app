@@ -19,7 +19,7 @@ resource "aws_cloudwatch_log_group" "recipe_api_gw_log_group" {
 resource "aws_apigatewayv2_stage" "recipe_api_gw_dev_stage" {
   api_id = aws_apigatewayv2_api.recipe_api_gw.id
 
-  name        = "dev"
+  name        = "recipe-app"
   auto_deploy = true
 
   access_log_settings {
@@ -53,14 +53,6 @@ resource "aws_apigatewayv2_route" "recipe_post_graphql_route" {
 
   target = "integrations/${aws_apigatewayv2_integration.recipe_api_gw_handler.id}"
 }
-
-resource "aws_apigatewayv2_route" "recipe_get_graphql_route" {
-  api_id    = aws_apigatewayv2_api.recipe_api_gw.id
-  route_key = "GET /graphql"
-
-  target = "integrations/${aws_apigatewayv2_integration.recipe_api_gw_handler.id}"
-}
-
 resource "aws_lambda_permission" "recipe_api_gw_lambda_permission" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"

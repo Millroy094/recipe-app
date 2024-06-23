@@ -35,7 +35,7 @@ services:
       - recipe-book-api
     stdin_open: true
     environment:
-      - REACT_APP_GRAPHQL_API_URL=http://localhost:3080/graphql
+      - REACT_APP_GRAPHQL_API_URL=http://localhost:3080/recipe-app/graphql
     volumes:
       - ./ui:/usr/src/app/ui
       - /usr/src/app/ui/node_modules

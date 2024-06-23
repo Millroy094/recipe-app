@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "recipe_dynamodb_table" {
-  name           = "recipe"
+  name           = "Recipe"
   hash_key       = "id"
   billing_mode   = "PROVISIONED"
   read_capacity  = 5
