@@ -1,31 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Accordion,
-  AccordionActions,
-  AccordionDetails,
-  AccordionSummary,
   Button,
   Card,
   Container,
   Divider,
-  FormControl,
-  FormHelperText,
   Grid,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   SelectChangeEvent,
   TextField,
-  Typography,
 } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import isEmpty from 'lodash/isEmpty';
-
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -35,31 +19,10 @@ import updateRecipeMutation from '../../gql/mutations/update-recipe';
 import addRecipeMutation from '../../gql/mutations/add-recipe';
 
 import { UNITS } from '../../constants/units';
-
-interface Ingredient {
-  id: string;
-  name: string;
-  measure: string;
-  unit: string;
-}
-
-interface Step {
-  id: string;
-  step: string;
-}
-
-interface Recipe {
-  id: string;
-  name: string;
-  ingredients: Ingredient[];
-  steps: Step[];
-}
-
-interface FormErrors {
-  name: string;
-  ingredients: Record<string, string>;
-  steps: Record<string, string>;
-}
+import AddItemAccordion from './AddItemAccordion';
+import { FormErrors, Ingredient, Recipe, Step } from './type';
+import IngredientList from './IngredientList/IngredientList';
+import StepList from './StepList';
 
 const initialFormState = { id: '', name: '', ingredients: [], steps: [] };
 const initialFormErrorState = { name: '', ingredients: {}, steps: {} };
@@ -251,7 +214,7 @@ const MoreInfo = () => {
           hasErrors = true;
         }
         if (isEmpty(ingredient.unit)) {
-          errors.ingredients[`ingredient_${index}_measure`] = 'Required';
+          errors.ingredients[`ingredient_${index}_unit`] = 'Required';
           hasErrors = true;
         }
       });
@@ -329,205 +292,25 @@ const MoreInfo = () => {
             />
           </Grid>
           <Grid item>
-            <Accordion defaultExpanded>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls='panel1-content'
-                id='panel1-header'
-              >
-                <Grid container direction='column'>
-                  <Typography variant='h6'>Ingredients</Typography>
-                  {formErrors.ingredients['ingredients'] && (
-                    <Typography variant='subtitle1' color='error'>
-                      {formErrors.ingredients['ingredients']}
-                    </Typography>
-                  )}
-                </Grid>
-              </AccordionSummary>
-              <AccordionDetails>
-                {ingredients?.length > 0 ? (
-                  <Grid container direction='column' spacing={2}>
-                    {ingredients.map(
-                      (ingredient: Ingredient, index: number) => (
-                        <Grid container item key={ingredient.id} spacing={2}>
-                          <Grid item xs={6}>
-                            <TextField
-                              data-testid={`ingredient_${index}_name`}
-                              name={`${index}_name`}
-                              label='Name'
-                              value={ingredient.name}
-                              fullWidth
-                              onChange={handleIngredientOnChange}
-                              error={
-                                !!formErrors.ingredients[
-                                  `ingredient_${index}_name`
-                                ]
-                              }
-                              helperText={
-                                formErrors.ingredients[
-                                  `ingredient_${index}_name`
-                                ] ?? ''
-                              }
-                            />
-                          </Grid>
-                          <Grid item xs={4}>
-                            <TextField
-                              data-testid={`ingredient_${index}_measure`}
-                              name={`${index}_measure`}
-                              label='Measure'
-                              value={ingredient.measure}
-                              fullWidth
-                              onChange={handleIngredientOnChange}
-                              error={
-                                !!formErrors.ingredients[
-                                  `ingredient_${index}_measure`
-                                ]
-                              }
-                              helperText={
-                                formErrors.ingredients[
-                                  `ingredient_${index}_measure`
-                                ] ?? ''
-                              }
-                            />
-                          </Grid>
-                          <Grid item xs={1}>
-                            <FormControl fullWidth>
-                              <InputLabel id='unit-select-label'>
-                                Units
-                              </InputLabel>
-                              <Select
-                                data-testid={`ingredient_${index}_unit`}
-                                name={`${index}_unit`}
-                                labelId='unit-select-label'
-                                label='Units'
-                                variant='outlined'
-                                fullWidth
-                                value={ingredient.unit}
-                                onChange={handleIngredientUnitOnChange}
-                                error={
-                                  !!formErrors.ingredients[
-                                    `ingredient_${index}_unit`
-                                  ]
-                                }
-                              >
-                                {UNITS.map((option) => (
-                                  <MenuItem key={option} value={option}>
-                                    {option}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                              {formErrors.ingredients[
-                                `ingredient_${index}_unit`
-                              ] && (
-                                <FormHelperText>
-                                  {
-                                    formErrors.ingredients[
-                                      `ingredient_${index}_unit`
-                                    ]
-                                  }
-                                </FormHelperText>
-                              )}
-                            </FormControl>
-                          </Grid>
-                          <Grid container item xs={1} justifyContent='center'>
-                            <IconButton
-                              onClick={() => handleRemoveIngredient(index)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Grid>
-                        </Grid>
-                      ),
-                    )}
-                  </Grid>
-                ) : (
-                  <Typography variant='inherit'>
-                    "Please press the add button to add ingredients"
-                  </Typography>
-                )}
-              </AccordionDetails>
-              <AccordionActions>
-                <Button
-                  variant='contained'
-                  color='success'
-                  onClick={handleAddIngredient}
-                  data-testId='addIngredient'
-                >
-                  Add Ingredient
-                </Button>
-              </AccordionActions>
-            </Accordion>
+            <IngredientList
+              ingredients={ingredients}
+              formErrors={formErrors}
+              handleIngredientOnChange={handleIngredientOnChange}
+              handleIngredientUnitOnChange={handleIngredientUnitOnChange}
+              handleAddIngredient={handleAddIngredient}
+              handleRemoveIngredient={handleRemoveIngredient}
+            />
           </Grid>
           <Grid item>
-            <Accordion defaultExpanded>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls='panel1-content'
-                id='panel1-header'
-              >
-                <Grid container direction='column'>
-                  <Typography variant='h6'>Steps</Typography>
-                  {formErrors.steps['steps'] && (
-                    <Typography variant='subtitle1' color='error'>
-                      {formErrors.steps['steps']}
-                    </Typography>
-                  )}
-                </Grid>
-              </AccordionSummary>
-              <AccordionDetails>
-                {steps?.length > 0 ? (
-                  <Grid container direction='column' spacing={2}>
-                    {steps.map((step: Step, index: number) => (
-                      <Grid key={step.id} container item>
-                        <Grid item xs={10}>
-                          <TextField
-                            data-testid={`step_${index}`}
-                            name={`${index}_step`}
-                            label={`Step ${index + 1}`}
-                            value={step.step}
-                            fullWidth
-                            onChange={handleStepOnChange}
-                            error={!!formErrors.steps[`step_${index}`]}
-                            helperText={formErrors.steps[`step_${index}`] ?? ''}
-                          />
-                        </Grid>
-                        <Grid container item xs={2} justifyContent='center'>
-                          <IconButton
-                            onClick={() => handleMoveStepUp(index)}
-                            disabled={index === 0}
-                          >
-                            <ArrowUpwardIcon />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => handleMoveStepDown(index)}
-                            disabled={index + 1 >= steps.length}
-                          >
-                            <ArrowDownwardIcon />
-                          </IconButton>
-                          <IconButton onClick={() => handleRemoveStep(index)}>
-                            <DeleteIcon />
-                          </IconButton>
-                        </Grid>
-                      </Grid>
-                    ))}
-                  </Grid>
-                ) : (
-                  <Typography variant='inherit'>
-                    Please press the add button to add a step
-                  </Typography>
-                )}
-              </AccordionDetails>
-              <AccordionActions>
-                <Button
-                  data-testid='addStep'
-                  variant='contained'
-                  color='success'
-                  onClick={handleAddStep}
-                >
-                  Add Step
-                </Button>
-              </AccordionActions>
-            </Accordion>
+            <StepList
+              steps={steps}
+              formErrors={formErrors}
+              handleAddStep={handleAddStep}
+              handleRemoveStep={handleRemoveStep}
+              handleStepOnChange={handleStepOnChange}
+              handleMoveStepUp={handleMoveStepUp}
+              handleMoveStepDown={handleMoveStepDown}
+            />
           </Grid>
         </Grid>
         <Divider sx={{ mt: 2, mb: 2 }} />
