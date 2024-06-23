@@ -1,12 +1,10 @@
 module "website" {
   source                      = "./website"
-  auth_lambda_url             = var.auth_lambda_url
-  depends_on                  = [var.backend]
+  recipe_lambda_url             = var.recipe_lambda_url
 }
 
 module "cloudfront" {
   source = "./cloudfront"
-  auth_bucket_regional_domain_name = module.website.auth_bucket_regional_domain_name
+  recipe_bucket_regional_domain_name = module.website.recipe_bucket_regional_domain_name
     depends_on                  = [module.website]
-
 }

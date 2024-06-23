@@ -1,14 +1,14 @@
-resource "aws_cloudfront_origin_access_identity" "auth_oai" {
-  comment = "auth-website OAI"
+resource "aws_cloudfront_origin_access_identity" "recipe_oai" {
+  comment = "recipe-website OAI"
 }
 
-resource "aws_cloudfront_distribution" "auth_distribution" {
+resource "aws_cloudfront_distribution" "recipe_distribution" {
   origin {
-    domain_name = var.auth_bucket_regional_domain_name
-    origin_id   = "auth-origin"
+    domain_name = var.recipe_bucket_regional_domain_name
+    origin_id   = "recipe-origin"
 
     s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.auth_oai.cloudfront_access_identity_path
+      origin_access_identity = aws_cloudfront_origin_access_identity.recipe_oai.cloudfront_access_identity_path
     }
   }
 
@@ -31,7 +31,7 @@ resource "aws_cloudfront_distribution" "auth_distribution" {
 
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "auth-origin"
+    target_origin_id = "recipe-origin"
 
     default_ttl = 3600
     min_ttl     = 0
@@ -53,7 +53,7 @@ resource "aws_cloudfront_distribution" "auth_distribution" {
     path_pattern     = "./index.html"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id = "auth-origin"
+    target_origin_id = "recipe-origin"
 
     default_ttl = 3600
     min_ttl     = 0

@@ -1,1 +1,1 @@
-variable "auth_lambda_url" {}
+variable "recipe_lambda_url" {}

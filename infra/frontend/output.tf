@@ -1,5 +1,5 @@
 
 
-output "react_auth_website_endpoint" {
-  value = module.cloudfront.react_auth_website_endpoint
+output "react_recipe_website_endpoint" {
+  value = module.cloudfront.react_recipe_website_endpoint
 }

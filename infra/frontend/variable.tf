@@ -1,3 +1,1 @@
-variable "auth_lambda_url" {}
-
-variable "backend" {}
+variable "recipe_lambda_url" {}
