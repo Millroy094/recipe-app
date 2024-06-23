@@ -1,17 +1,20 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import { json, urlencoded } from "body-parser";
-import cors from "cors";
-import http from "http";
-import express from "express";
-import { ApolloServer } from "@apollo/server";
-import { expressMiddleware } from "@apollo/server/express4";
-import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
+import { json, urlencoded } from 'body-parser';
+import cors from 'cors';
+import http from 'http';
+import express from 'express';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from '@apollo/server-plugin-landing-page-graphql-playground';
 
-import dynamoose from "dynamoose";
-import schema from "./graphql";
+import dynamoose from 'dynamoose';
+import dotenv from 'dotenv';
 
+import schema from './graphql';
+
+dotenv.config();
 const app = express();
 
 export class Application {
@@ -23,12 +26,12 @@ export class Application {
 
   setupDatabase() {
     const ddb = new dynamoose.aws.ddb.DynamoDB({
-      endpoint: "http://dynamodb:8000",
+      endpoint: 'http://dynamodb:8000',
       credentials: {
-        accessKeyId: "LOCAL",
-        secretAccessKey: "LOCAL",
+        accessKeyId: 'LOCAL',
+        secretAccessKey: 'LOCAL',
       },
-      region: "local",
+      region: 'local',
     });
     dynamoose.aws.ddb.set(ddb);
   }
@@ -52,11 +55,11 @@ export class Application {
 
     await server.start();
 
-    app.use("/graphql", expressMiddleware(server));
+    app.use('/graphql', expressMiddleware(server));
   }
 
   listen() {
-    app.listen(3080, () => console.log("Listening on port 3080"));
+    app.listen(3080, () => console.log('Listening on port 3080'));
   }
 }
 

@@ -47,6 +47,7 @@ export const Home = () => {
 
   useEffect(() => {
     getRecipes();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -64,6 +65,7 @@ export const Home = () => {
 
       setRecipes(getRecipes);
     }
+    // eslint-disable-next-line
   }, [data, loading]);
 
   if (loading) {

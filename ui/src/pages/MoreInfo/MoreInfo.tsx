@@ -18,8 +18,6 @@ import getRecipeQuery from '../../gql/queries/get-recipe';
 import updateRecipeMutation from '../../gql/mutations/update-recipe';
 import addRecipeMutation from '../../gql/mutations/add-recipe';
 
-import { UNITS } from '../../constants/units';
-import AddItemAccordion from './AddItemAccordion';
 import { FormErrors, Ingredient, Recipe, Step } from './type';
 import IngredientList from './IngredientList/IngredientList';
 import StepList from './StepList';

@@ -5,7 +5,7 @@ import '@fontsource/roboto/700.css';
 
 import App from './App';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import {
   ApolloClient,
   InMemoryCache,
@@ -25,16 +25,18 @@ const defaultOptions: DefaultOptions = {
 };
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3080/graphql',
+  uri: process.env.REACT_APP_GRAPHQL_API_URL,
   cache: new InMemoryCache(),
   defaultOptions: defaultOptions,
 });
 
-ReactDOM.render(
+const container = document.getElementById('root')!;
+const root = createRoot(container);
+
+root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <App />
     </ApolloProvider>
   </React.StrictMode>,
-  document.getElementById('root'),
 );
