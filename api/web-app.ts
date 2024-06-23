@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
 import http from 'http';
@@ -16,9 +14,9 @@ import schema from './graphql';
 
 dotenv.config();
 
-const app = express();
-
 export class Application {
+  app = express();
+
   constructor() {
     this.setupDatabase();
     this.setupApplicationSetting();
@@ -40,13 +38,13 @@ export class Application {
   }
 
   setupApplicationSetting() {
-    app.use(cors());
-    app.use(urlencoded({ extended: false }));
-    app.use(json());
+    this.app.use(cors());
+    this.app.use(urlencoded({ extended: false }));
+    this.app.use(json());
   }
 
   async setupGraphQL() {
-    const httpServer = http.createServer(app);
+    const httpServer = http.createServer(this.app);
 
     const server = new ApolloServer({
       schema,
@@ -58,14 +56,14 @@ export class Application {
 
     await server.start();
 
-    app.use('/graphql', expressMiddleware(server));
+    this.app.use('/recipe-app/graphql', expressMiddleware(server));
   }
 
   listen() {
-    app.listen(3080, () => console.log('Listening on port 3080'));
+    this.app.listen(3080, () => console.log('Listening on port 3080'));
   }
 }
 
 const application = new Application();
 
-application.listen();
+export default application;

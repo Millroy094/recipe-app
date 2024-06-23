@@ -1,0 +1,1 @@
+variable "recipe_bucket_regional_domain_name" {}
