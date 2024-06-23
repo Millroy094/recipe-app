@@ -12,9 +12,6 @@ import {
   ApolloProvider,
   DefaultOptions,
 } from '@apollo/client';
-// import dotenv from 'dotenv';
-
-// dotenv.config();
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
@@ -26,8 +23,6 @@ const defaultOptions: DefaultOptions = {
     errorPolicy: 'all',
   },
 };
-
-console.log(process.env);
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_GRAPHQL_API_URL,
