@@ -1,17 +1,21 @@
-import 'reflect-metadata';
-import serverlessExpress from 'serverless-express';
-import app from './web-app';
+import "reflect-metadata";
+import serverlessExpress from "@vendia/serverless-express";
+import Application from "./web-app";
 
 import {
   Handler,
   Context,
   APIGatewayProxyEventV2,
   APIGatewayProxyResultV2,
-} from 'aws-lambda';
+  APIGatewayProxyResult,
+  Callback,
+} from "aws-lambda";
 
 export const handler: Handler = async (
   event: APIGatewayProxyEventV2,
-  context: Context,
+  apiContext: Context,
+  callback: Callback<APIGatewayProxyResult>
 ): Promise<APIGatewayProxyResultV2 | void> => {
-  serverlessExpress({ app });
+  const graphqlHandler = serverlessExpress({ app: Application.app });
+  return graphqlHandler(event, apiContext, callback);
 };
