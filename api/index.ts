@@ -15,6 +15,7 @@ import dotenv from 'dotenv';
 import schema from './graphql';
 
 dotenv.config();
+
 const app = express();
 
 export class Application {
@@ -25,15 +26,17 @@ export class Application {
   }
 
   setupDatabase() {
-    const ddb = new dynamoose.aws.ddb.DynamoDB({
-      endpoint: 'http://dynamodb:8000',
-      credentials: {
-        accessKeyId: 'LOCAL',
-        secretAccessKey: 'LOCAL',
-      },
-      region: 'local',
-    });
-    dynamoose.aws.ddb.set(ddb);
+    if (process.env.NODE_ENV === 'development') {
+      const ddb = new dynamoose.aws.ddb.DynamoDB({
+        endpoint: process.env.DYNAMO_DB_ENDPOINT,
+        credentials: {
+          accessKeyId: 'LOCAL',
+          secretAccessKey: 'LOCAL',
+        },
+        region: 'local',
+      });
+      dynamoose.aws.ddb.set(ddb);
+    }
   }
 
   setupApplicationSetting() {
