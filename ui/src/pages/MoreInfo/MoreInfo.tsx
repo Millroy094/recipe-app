@@ -319,6 +319,7 @@ const MoreInfo = () => {
         <Grid container spacing={2} direction='column'>
           <Grid item>
             <TextField
+              data-testid='recipeName'
               label='Recipe Name'
               fullWidth
               value={name}
@@ -351,6 +352,7 @@ const MoreInfo = () => {
                         <Grid container item key={ingredient.id} spacing={2}>
                           <Grid item xs={6}>
                             <TextField
+                              data-testid={`ingredient_${index}_name`}
                               name={`${index}_name`}
                               label='Name'
                               value={ingredient.name}
@@ -370,6 +372,7 @@ const MoreInfo = () => {
                           </Grid>
                           <Grid item xs={4}>
                             <TextField
+                              data-testid={`ingredient_${index}_measure`}
                               name={`${index}_measure`}
                               label='Measure'
                               value={ingredient.measure}
@@ -393,6 +396,7 @@ const MoreInfo = () => {
                                 Units
                               </InputLabel>
                               <Select
+                                data-testid={`ingredient_${index}_unit`}
                                 name={`${index}_unit`}
                                 labelId='unit-select-label'
                                 label='Units'
@@ -447,6 +451,7 @@ const MoreInfo = () => {
                   variant='contained'
                   color='success'
                   onClick={handleAddIngredient}
+                  data-testId='addIngredient'
                 >
                   Add Ingredient
                 </Button>
@@ -476,6 +481,7 @@ const MoreInfo = () => {
                       <Grid key={step.id} container item>
                         <Grid item xs={10}>
                           <TextField
+                            data-testid={`step_${index}`}
                             name={`${index}_step`}
                             label={`Step ${index + 1}`}
                             value={step.step}
@@ -513,6 +519,7 @@ const MoreInfo = () => {
               </AccordionDetails>
               <AccordionActions>
                 <Button
+                  data-testid='addStep'
                   variant='contained'
                   color='success'
                   onClick={handleAddStep}
@@ -527,6 +534,7 @@ const MoreInfo = () => {
         <Grid container spacing={2} justifyContent='flex-end'>
           <Grid item>
             <Button
+              data-testid='goBack'
               variant='contained'
               color='secondary'
               onClick={() => navigateToHome()}
@@ -535,8 +543,13 @@ const MoreInfo = () => {
             </Button>
           </Grid>
           <Grid item>
-            <Button variant='contained' color='success' onClick={onSubmit}>
-              Save
+            <Button
+              data-testid='submitRecipe'
+              variant='contained'
+              color='success'
+              onClick={onSubmit}
+            >
+              {isNew ? 'Create' : 'Save'}
             </Button>
           </Grid>
         </Grid>

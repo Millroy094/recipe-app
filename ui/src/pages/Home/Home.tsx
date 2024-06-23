@@ -112,6 +112,7 @@ export const Home = () => {
             <Grid container spacing={2}>
               <Grid item xs={3}>
                 <TextField
+                  data-testid='searchByRecipeName'
                   label='Search by recipe name'
                   variant='outlined'
                   fullWidth
@@ -126,6 +127,7 @@ export const Home = () => {
                       Filter by Ingredients
                     </InputLabel>
                     <Select
+                      data-testid='filterByIngredients'
                       labelId='filter-by-ingredients-label'
                       label='Filter by Ingredients'
                       variant='outlined'
@@ -147,6 +149,7 @@ export const Home = () => {
             <Grid container justifyContent='flex-end' spacing={1}>
               <Grid item>
                 <Button
+                  data-testId='createRecipe'
                   variant='contained'
                   size='large'
                   color='success'
@@ -156,7 +159,12 @@ export const Home = () => {
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant='contained' size='large' onClick={onSearch}>
+                <Button
+                  data-testId='searchRecipe'
+                  variant='contained'
+                  size='large'
+                  onClick={onSearch}
+                >
                   Search
                 </Button>
               </Grid>
@@ -169,7 +177,7 @@ export const Home = () => {
               <Grid container direction='column' spacing={2}>
                 {recipes.map((recipe: RecipeListing) => (
                   <Grid item key={recipe.id}>
-                    <Card sx={{ p: 2 }}>
+                    <Card sx={{ p: 2 }} data-testid='recipe'>
                       <Grid container direction='column' spacing={1}>
                         <Grid item>
                           <Typography variant='h6'>{`Recipe Name: ${recipe.name}`}</Typography>
@@ -199,6 +207,7 @@ export const Home = () => {
                         >
                           <Grid item>
                             <Button
+                              data-testid='viewRecipe'
                               variant='contained'
                               color='primary'
                               onClick={() => navigateToRecipePage(recipe.id)}
@@ -208,6 +217,7 @@ export const Home = () => {
                           </Grid>
                           <Grid item>
                             <Button
+                              data-testid='removeRecipe'
                               variant='contained'
                               color='error'
                               onClick={() => onRemove(recipe.id)}
