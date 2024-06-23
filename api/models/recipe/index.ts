@@ -1,4 +1,4 @@
-import { Schema, model } from "dynamoose";
+import { Schema, model } from 'dynamoose';
 
 const RecipeSchema = new Schema(
   {
@@ -26,24 +26,16 @@ const RecipeSchema = new Schema(
               type: String,
               required: true,
               enum: [
-                "mL",
-                "L",
-                "dL",
-                "tsp",
-                "tbsp",
-                "oz",
-                "cup",
-                "gill",
-                "pt",
-                "qt",
-                "gal",
-                "mg",
-                "g",
-                "kg",
-                "lb",
-                "inch",
-                "°C",
-                "°F",
+                'mL',
+                'L',
+                'tsp',
+                'tbsp',
+                'oz',
+                'cup',
+                'g',
+                'kg',
+                'lb',
+                'inch',
               ],
             },
           },
@@ -59,8 +51,8 @@ const RecipeSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
-const Recipe = model("Recipe", RecipeSchema);
+const Recipe = model('Recipe', RecipeSchema);
 
 export default Recipe;
