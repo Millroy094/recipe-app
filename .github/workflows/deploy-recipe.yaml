@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,3 +35,41 @@ jobs:
         env:
           TF_VAR_aws_access_key: '${{secrets.AWS_ACCESS_KEY_ID}}'
           TF_VAR_aws_secret_key: '${{secrets.AWS_SECRET_ACCESS_KEY}}'
+  e2e-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.11.0'
+          cache-dependency-path: '**/package-lock.json'
+      - name: Configure AWS Credentials
+        id: aws_credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Setup Open Tofu
+        uses: opentofu/setup-opentofu@v1
+      - name: Get outputs
+        uses: dflook/tofu-output@v1
+        id: tf-outputs
+        with:
+          path: ./infra
+          backend_config: bucket=alc-${{ vars.AWS_TERRAFORM_STATE_BUCKET_NAME }}-ss-env-tf-state key=${{ vars.AWS_TERRAFORM_STATE_KEY }}.tfstate
+      - name: Prepare run Cypress
+        working-directory: ./e2e
+        run: npm ci
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./e2e
+          config: >-
+            baseUrl=${{ steps.tf-outputs.outputs.website_url }}/
+          spec: cypress/e2e/recipe_app.cy.ts
