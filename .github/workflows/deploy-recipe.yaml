@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         component:
-          - website
-          - registration
+          - api
+          - ui
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -24,7 +24,7 @@ jobs:
           node-version: "20.11.0"
           cache: npm
           cache-dependency-path: "**/package-lock.json"
-      - name: "${{matrix.component}} webhook-admin"
+      - name: "run ${{matrix.component}} unit tests"
         working-directory: "./${{matrix.component}}"
         run: |
           npm ci

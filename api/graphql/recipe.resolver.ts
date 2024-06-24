@@ -35,7 +35,7 @@ export default class RecipeResolver {
 
       return resultsFilteredByIngredients;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       throw new GraphQLError("Unable to retrieve recipes.");
     }
   }
@@ -45,10 +45,14 @@ export default class RecipeResolver {
     try {
       const recipe = await RecipeModel.get(recipeId);
 
+      if (!recipe) {
+        throw new Error("Recipe with that id doesn't exists");
+      }
+
       const { id, name, steps, ingredients, ingredientNames } = recipe;
       return { id, name, steps, ingredients, ingredientNames };
     } catch (err) {
-      console.log(err);
+      console.error(err);
       throw new GraphQLError("Unable to retrieve recipe.");
     }
   }
@@ -64,7 +68,7 @@ export default class RecipeResolver {
       await RecipeModel.create(serializedRecipeInput);
       return true;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       throw new GraphQLError("Unable to create recipe.");
     }
   }
@@ -84,7 +88,7 @@ export default class RecipeResolver {
       await RecipeModel.update(id, serializedRecipeInput);
       return true;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       throw new GraphQLError("Unable to update recipe.");
     }
   }
@@ -93,10 +97,15 @@ export default class RecipeResolver {
   async removeRecipe(@Arg("recipeId") recipeId: string): Promise<boolean> {
     try {
       const recipe = await RecipeModel.get(recipeId);
+
+      if (!recipe) {
+        throw new Error("Recipe with that id doesn't exists");
+      }
+
       await recipe.delete();
       return true;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       throw new GraphQLError("Unable to remove recipe.");
     }
   }
