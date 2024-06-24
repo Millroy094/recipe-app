@@ -32,6 +32,7 @@ const RecipeSchema = new Schema(
                 'tbsp',
                 'oz',
                 'cup',
+                'qty',
                 'g',
                 'kg',
                 'lb',

@@ -5,6 +5,7 @@ export const UNITS = [
   'tbsp',
   'oz',
   'cup',
+  'qty',
   'g',
   'kg',
   'lb',
