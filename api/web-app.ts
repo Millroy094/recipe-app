@@ -39,7 +39,6 @@ export class Application {
 
   setupApplicationSetting() {
     this.app.use(cors());
-    this.app.options('*', cors());
     this.app.use(urlencoded({ extended: false }));
     this.app.use(json());
   }
@@ -47,14 +46,17 @@ export class Application {
   async setupGraphQL() {
     const httpServer = http.createServer(this.app);
 
+    const plugins: ApolloServerPlugin[] = [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+    ];
+
+    if (process.env.NODE_ENV === 'development') {
+      plugins.push(ApolloServerPluginLandingPageGraphQLPlayground());
+    }
+
     const server = new ApolloServer({
       schema,
-      plugins: [
-        ApolloServerPluginDrainHttpServer({ httpServer }),
-        process.env.NODE_ENV === 'development'
-          ? ApolloServerPluginLandingPageGraphQLPlayground()
-          : null,
-      ],
+      plugins,
     });
 
     await server.start();
