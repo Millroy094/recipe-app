@@ -56,11 +56,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
-      - name: Setup Open Tofu
-        uses: opentofu/setup-opentofu@v1
-      - name: Initialise Open Tofu
-        working-directory: './infra'
-        run: tofu init --backend-config="bucket=${{vars.AWS_TERRAFORM_STATE_BUCKET_NAME}}" --backend-config="key=${{vars.AWS_TERRAFORM_STATE_KEY}}.tfstate"
       - name: Get outputs
         uses: dflook/tofu-output@v1
         id: tf-outputs
