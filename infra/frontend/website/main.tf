@@ -75,7 +75,7 @@ resource "null_resource" "recipe_website_package_build" {
     command = <<EOT
       FRONTEND_DIR="${path.root}/../ui"
 
-      (cd $FRONTEND_DIR && echo "REACT_APP_GRAPHQL_API_URL=${var.recipe_lambda_url}" >> .env.production )
+      (cd $FRONTEND_DIR && echo "REACT_APP_GRAPHQL_API_URL=${var.recipe_lambda_url}/graphql" >> .env.production )
 
       (cd $FRONTEND_DIR && npm ci && npm run build)
 
