@@ -2,7 +2,7 @@ import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
 import http from 'http';
 import express from 'express';
-import { ApolloServer } from '@apollo/server';
+import { ApolloServer, ApolloServerPlugin } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from '@apollo/server-plugin-landing-page-graphql-playground';
@@ -50,13 +50,15 @@ export class Application {
       schema,
       plugins: [
         ApolloServerPluginDrainHttpServer({ httpServer }),
-        ApolloServerPluginLandingPageGraphQLPlayground(),
+        process.env.NODE_ENV === 'development'
+          ? ApolloServerPluginLandingPageGraphQLPlayground()
+          : null,
       ],
     });
 
     await server.start();
 
-    this.app.use('/recipe-app/graphql', expressMiddleware(server));
+    this.app.use('/recipe-app/graphql', cors(), expressMiddleware(server));
   }
 
   listen() {

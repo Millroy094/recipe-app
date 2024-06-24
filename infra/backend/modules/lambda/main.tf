@@ -10,6 +10,7 @@ resource "null_resource" "recipe_lambda_package_build" {
     command = <<EOT
       BACKEND_SOURCE_DIR="${path.root}/../api"
       cd $BACKEND_SOURCE_DIR 
+      npm ci
       npm run build
 
       cp "$BACKEND_SOURCE_DIR/package.json" "$BACKEND_SOURCE_DIR/dist"
