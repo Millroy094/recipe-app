@@ -70,5 +70,5 @@ jobs:
         with:
           working-directory: ./e2e
           config: >-
-            baseUrl=https://${{ steps.tf-outputs.outputs.website_url }}/
+            baseUrl=https://${{ steps.tf-outputs.outputs.website_url }}
           spec: cypress/e2e/recipe_app.cy.ts
