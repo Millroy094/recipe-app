@@ -19,7 +19,7 @@ import updateRecipeMutation from '../../gql/mutations/update-recipe';
 import addRecipeMutation from '../../gql/mutations/add-recipe';
 
 import { FormErrors, Ingredient, Recipe, Step } from './type';
-import IngredientList from './IngredientList/IngredientList';
+import IngredientList from './IngredientList';
 import StepList from './StepList';
 
 const initialFormState = { id: '', name: '', ingredients: [], steps: [] };
