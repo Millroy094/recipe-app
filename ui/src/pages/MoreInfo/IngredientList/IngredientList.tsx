@@ -1,7 +1,7 @@
-import { Grid, SelectChangeEvent, Typography } from '@mui/material';
-import AddItemAccordion from '../AddItemAccordion';
-import { FormErrors, Ingredient } from '../type';
-import IngredientListItem from './IngredientListItem';
+import { Grid, SelectChangeEvent, Typography } from "@mui/material";
+import AddItemAccordion from "../AddItemAccordion";
+import { FormErrors, Ingredient } from "../type";
+import IngredientListItem from "./IngredientListItem";
 
 interface IngredientListProps {
   ingredients: Ingredient[];
@@ -23,14 +23,14 @@ const IngredientList = (props: IngredientListProps) => {
   } = props;
   return (
     <AddItemAccordion
-      error={formErrors.ingredients['ingredients']}
-      title='Ingredients'
-      addItemButtonLabel='Add Ingredient'
-      addItemButtonTestId='addIngredient'
+      error={formErrors.ingredients["ingredients"]}
+      title="Ingredients"
+      addItemButtonLabel="Add Ingredient"
+      addItemButtonTestId="addIngredient"
       handleAddItem={handleAddIngredient}
     >
       {ingredients?.length > 0 ? (
-        <Grid container direction='column' spacing={2}>
+        <Grid container direction="column" spacing={2}>
           {ingredients.map((ingredient: Ingredient, index: number) => (
             <IngredientListItem
               key={ingredient.id}
@@ -44,8 +44,8 @@ const IngredientList = (props: IngredientListProps) => {
           ))}
         </Grid>
       ) : (
-        <Typography variant='inherit'>
-          "Please press the add button to add ingredients"
+        <Typography variant="inherit">
+          Please press the add button to add ingredients
         </Typography>
       )}
     </AddItemAccordion>
