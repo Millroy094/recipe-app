@@ -39,8 +39,15 @@ export class Application {
 
   setupApplicationSetting() {
     this.app.use(cors());
+    this.app.options('*', cors());
     this.app.use(urlencoded({ extended: false }));
     this.app.use(json());
+    // this.app.use(function (req, res, next) {
+    //   res.setHeader('Access-Control-Allow-Origin', '*');
+    //   res.setHeader('Access-Control-Allow-Credentials', '*');
+
+    //   next();
+    // });
   }
 
   async setupGraphQL() {
