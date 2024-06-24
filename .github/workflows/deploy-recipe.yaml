@@ -30,6 +30,7 @@ jobs:
           npm ci
           npm run test
   build-and-deploy:
+    needs: unit-tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
