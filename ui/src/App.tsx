@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import {
   ApolloClient,
@@ -26,7 +27,7 @@ const client = new ApolloClient({
   defaultOptions: defaultOptions,
 });
 
-const App = () => {
+const App: FC<{}> = () => {
   return (
     <ApolloProvider client={client}>
       <div className="container">

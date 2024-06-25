@@ -1,5 +1,6 @@
 import { Button, Card, Chip, Grid, Typography } from "@mui/material";
 import { RecipeListing } from "./type";
+import { FC } from "react";
 
 interface RecipeListItemProps {
   recipe: RecipeListing;
@@ -7,7 +8,7 @@ interface RecipeListItemProps {
   onRemove: (id: string) => void;
 }
 
-const RecipeListItem = (props: RecipeListItemProps) => {
+const RecipeListItem: FC<RecipeListItemProps> = (props) => {
   const { recipe, navigateToRecipePage, onRemove } = props;
   return (
     <Card sx={{ p: 2 }} data-testid="recipe">

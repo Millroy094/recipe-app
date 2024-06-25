@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   FormControl,
   FormHelperText,
@@ -9,10 +10,10 @@ import {
   SelectChangeEvent,
   TextField,
   Typography,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { UNITS } from '../../../constants/units';
-import { FormErrors, Ingredient } from '../type';
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { UNITS } from "../../../constants/units";
+import { FormErrors, Ingredient } from "../type";
 
 interface IngredientItemProps {
   index: number;
@@ -23,7 +24,7 @@ interface IngredientItemProps {
   handleRemoveIngredient: (index: number) => void;
 }
 
-const IngredientItem = (props: IngredientItemProps) => {
+const IngredientItem: FC<IngredientItemProps> = (props) => {
   const {
     ingredient,
     formErrors,
@@ -38,37 +39,37 @@ const IngredientItem = (props: IngredientItemProps) => {
         <TextField
           data-testid={`ingredient_${index}_name`}
           name={`${index}_name`}
-          label='Name'
+          label="Name"
           value={ingredient.name}
           fullWidth
           onChange={handleIngredientOnChange}
           error={!!formErrors.ingredients[`ingredient_${index}_name`]}
-          helperText={formErrors.ingredients[`ingredient_${index}_name`] ?? ''}
+          helperText={formErrors.ingredients[`ingredient_${index}_name`] ?? ""}
         />
       </Grid>
       <Grid item xs={4}>
         <TextField
           data-testid={`ingredient_${index}_measure`}
           name={`${index}_measure`}
-          label='Measure'
+          label="Measure"
           value={ingredient.measure}
           fullWidth
           onChange={handleIngredientOnChange}
           error={!!formErrors.ingredients[`ingredient_${index}_measure`]}
           helperText={
-            formErrors.ingredients[`ingredient_${index}_measure`] ?? ''
+            formErrors.ingredients[`ingredient_${index}_measure`] ?? ""
           }
         />
       </Grid>
       <Grid item xs={1}>
         <FormControl fullWidth>
-          <InputLabel id='unit-select-label'>Units</InputLabel>
+          <InputLabel id="unit-select-label">Units</InputLabel>
           <Select
             data-testid={`ingredient_${index}_unit`}
             name={`${index}_unit`}
-            labelId='unit-select-label'
-            label='Units'
-            variant='outlined'
+            labelId="unit-select-label"
+            label="Units"
+            variant="outlined"
             fullWidth
             value={ingredient.unit}
             onChange={handleIngredientUnitOnChange}
@@ -82,14 +83,14 @@ const IngredientItem = (props: IngredientItemProps) => {
           </Select>
           {formErrors.ingredients[`ingredient_${index}_unit`] && (
             <FormHelperText>
-              <Typography variant='inherit' color='error'>
+              <Typography variant="inherit" color="error">
                 {formErrors.ingredients[`ingredient_${index}_unit`]}
               </Typography>
             </FormHelperText>
           )}
         </FormControl>
       </Grid>
-      <Grid container item xs={1} justifyContent='center'>
+      <Grid container item xs={1} justifyContent="center">
         <IconButton onClick={() => handleRemoveIngredient(index)}>
           <DeleteIcon />
         </IconButton>

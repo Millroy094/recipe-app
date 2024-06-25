@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -7,33 +7,33 @@ import {
   Grid,
   SelectChangeEvent,
   TextField,
-} from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
-import isEmpty from 'lodash/isEmpty';
+} from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
+import isEmpty from "lodash/isEmpty";
 
-import { useNavigate, useParams } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useNavigate, useParams } from "react-router-dom";
+import { useLazyQuery, useMutation } from "@apollo/client";
 
-import getRecipeQuery from '../../gql/queries/get-recipe';
-import updateRecipeMutation from '../../gql/mutations/update-recipe';
-import addRecipeMutation from '../../gql/mutations/add-recipe';
+import getRecipeQuery from "../../gql/queries/get-recipe";
+import updateRecipeMutation from "../../gql/mutations/update-recipe";
+import addRecipeMutation from "../../gql/mutations/add-recipe";
 
-import { FormErrors, Ingredient, Recipe, Step } from './type';
-import IngredientList from './IngredientList';
-import StepList from './StepList';
+import { FormErrors, Ingredient, Recipe, Step } from "./type";
+import IngredientList from "./IngredientList";
+import StepList from "./StepList";
 
-const initialFormState = { id: '', name: '', ingredients: [], steps: [] };
-const initialFormErrorState = { name: '', ingredients: {}, steps: {} };
+const initialFormState = { id: "", name: "", ingredients: [], steps: [] };
+const initialFormErrorState = { name: "", ingredients: {}, steps: {} };
 
-const MoreInfo = () => {
+const MoreInfo: FC<{}> = () => {
   const [form, setForm] = useState<Recipe>(initialFormState);
   const [formErrors, setFormErrors] = useState<FormErrors>(
-    initialFormErrorState,
+    initialFormErrorState
   );
 
   const { id } = useParams();
 
-  const isNew = id === 'NEW';
+  const isNew = id === "NEW";
 
   const navigate = useNavigate();
 
@@ -62,7 +62,7 @@ const MoreInfo = () => {
             (ingredient: { name: string; measure: string; unit: string }) => ({
               ...ingredient,
               id: uuidv4(),
-            }),
+            })
           ),
         ],
 
@@ -84,7 +84,7 @@ const MoreInfo = () => {
   };
 
   const handleAddStep = () => {
-    setForm({ ...form, steps: [...form.steps, { id: uuidv4(), step: '' }] });
+    setForm({ ...form, steps: [...form.steps, { id: uuidv4(), step: "" }] });
   };
 
   const handleRemoveStep = (index: number) => {
@@ -137,11 +137,11 @@ const MoreInfo = () => {
 
   const handleStepOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const [index] = name.split('_');
+    const [index] = name.split("_");
     setForm({
       ...form,
       steps: form.steps.map((step: Step, i: number) =>
-        i === parseInt(index) ? { ...step, step: value } : step,
+        i === parseInt(index) ? { ...step, step: value } : step
       ),
     });
   };
@@ -151,7 +151,7 @@ const MoreInfo = () => {
       ...form,
       ingredients: [
         ...form.ingredients,
-        { id: uuidv4(), name: '', measure: '', unit: '' },
+        { id: uuidv4(), name: "", measure: "", unit: "" },
       ],
     });
   };
@@ -160,31 +160,31 @@ const MoreInfo = () => {
     setForm({
       ...form,
       ingredients: form.ingredients.filter(
-        (ingredient: Ingredient, i: number) => i !== index,
+        (ingredient: Ingredient, i: number) => i !== index
       ),
     });
   };
 
   const handleIngredientOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const [index, fieldName] = name.split('_');
+    const [index, fieldName] = name.split("_");
     setForm({
       ...form,
       ingredients: form.ingredients.map((ingredient: Ingredient, i: number) =>
         i === parseInt(index)
           ? { ...ingredient, [fieldName]: value }
-          : ingredient,
+          : ingredient
       ),
     });
   };
 
   const handleIngredientUnitOnChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
-    const [index] = name.split('_');
+    const [index] = name.split("_");
     setForm({
       ...form,
       ingredients: form.ingredients.map((ingredient: Ingredient, i: number) =>
-        i === parseInt(index) ? { ...ingredient, unit: value } : ingredient,
+        i === parseInt(index) ? { ...ingredient, unit: value } : ingredient
       ),
     });
   };
@@ -194,43 +194,43 @@ const MoreInfo = () => {
     const errors: FormErrors = { ...initialFormErrorState };
 
     if (isEmpty(form.name)) {
-      errors.name = 'Required';
+      errors.name = "Required";
       hasErrors = true;
     }
 
     if (!isEmpty(form.ingredients)) {
       form.ingredients.forEach((ingredient: Ingredient, index: number) => {
         if (isEmpty(ingredient.name)) {
-          errors.ingredients[`ingredient_${index}_name`] = 'Required';
+          errors.ingredients[`ingredient_${index}_name`] = "Required";
           hasErrors = true;
         }
         if (isEmpty(ingredient.measure)) {
-          errors.ingredients[`ingredient_${index}_measure`] = 'Required';
+          errors.ingredients[`ingredient_${index}_measure`] = "Required";
           hasErrors = true;
         } else if (!/^[\d/.]+$/.test(ingredient.measure)) {
-          errors.ingredients[`ingredient_${index}_measure`] = 'Invalid entry';
+          errors.ingredients[`ingredient_${index}_measure`] = "Invalid entry";
           hasErrors = true;
         }
         if (isEmpty(ingredient.unit)) {
-          errors.ingredients[`ingredient_${index}_unit`] = 'Required';
+          errors.ingredients[`ingredient_${index}_unit`] = "Required";
           hasErrors = true;
         }
       });
     } else {
-      errors.ingredients['ingredients'] =
-        'You need to enter at least one ingredient';
+      errors.ingredients["ingredients"] =
+        "You need to enter at least one ingredient";
       hasErrors = true;
     }
 
     if (!isEmpty(form.steps)) {
       form.steps.forEach((step: Step, index: number) => {
         if (!step.step) {
-          errors.steps[`step_${index}`] = 'Required';
+          errors.steps[`step_${index}`] = "Required";
           hasErrors = true;
         }
       });
     } else {
-      errors.steps['steps'] = 'You need to enter at least one step';
+      errors.steps["steps"] = "You need to enter at least one step";
       hasErrors = true;
     }
 
@@ -253,7 +253,7 @@ const MoreInfo = () => {
             name,
             measure,
             unit,
-          }),
+          })
         ),
         steps: [...form.steps.map((step: Step) => step.step)],
       };
@@ -275,17 +275,17 @@ const MoreInfo = () => {
   const { name, ingredients, steps } = form;
 
   return (
-    <Container maxWidth='lg' sx={{ p: 2 }}>
+    <Container maxWidth="lg" sx={{ p: 2 }}>
       <Card sx={{ p: 2 }}>
-        <Grid container spacing={2} direction='column'>
+        <Grid container spacing={2} direction="column">
           <Grid item>
             <TextField
-              data-testid='recipeName'
-              label='Recipe Name'
+              data-testid="recipeName"
+              label="Recipe Name"
               fullWidth
               value={name}
               error={!!formErrors.name}
-              helperText={formErrors.name ?? ''}
+              helperText={formErrors.name ?? ""}
               onChange={onChangeName}
             />
           </Grid>
@@ -312,12 +312,12 @@ const MoreInfo = () => {
           </Grid>
         </Grid>
         <Divider sx={{ mt: 2, mb: 2 }} />
-        <Grid container spacing={2} justifyContent='flex-end'>
+        <Grid container spacing={2} justifyContent="flex-end">
           <Grid item>
             <Button
-              data-testid='goBack'
-              variant='contained'
-              color='secondary'
+              data-testid="goBack"
+              variant="contained"
+              color="secondary"
               onClick={() => navigateToHome()}
             >
               Go back
@@ -325,12 +325,12 @@ const MoreInfo = () => {
           </Grid>
           <Grid item>
             <Button
-              data-testid='submitRecipe'
-              variant='contained'
-              color='success'
+              data-testid="submitRecipe"
+              variant="contained"
+              color="success"
               onClick={onSubmit}
             >
-              {isNew ? 'Create' : 'Save'}
+              {isNew ? "Create" : "Save"}
             </Button>
           </Grid>
         </Grid>

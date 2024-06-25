@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getRecipesQuery from "../../gql/queries/get-recipes";
 import removeRecipeQuery from "../../gql/mutations/remove-recipe";
@@ -19,7 +19,7 @@ interface RecipeListing {
   ingredientNames: string[];
 }
 
-const Home = () => {
+const Home: FC<{}> = () => {
   const [recipes, setRecipes] = useState([]);
   const [ingredientOptions, setIngredientOptions] = useState([]);
 

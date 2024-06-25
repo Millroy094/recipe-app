@@ -1,10 +1,11 @@
-import { Grid, IconButton, TextField } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { FormErrors, Step } from '../type';
+import { FC } from "react";
+import { Grid, IconButton, TextField } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { FormErrors, Step } from "../type";
 
-interface StepListProps {
+interface StepProps {
   step: Step;
   stepCount: number;
   index: number;
@@ -15,7 +16,7 @@ interface StepListProps {
   handleRemoveStep: (index: number) => void;
 }
 
-const StepListItem = (props: StepListProps) => {
+const StepListItem: FC<StepProps> = (props) => {
   const {
     step,
     stepCount,
@@ -37,10 +38,10 @@ const StepListItem = (props: StepListProps) => {
           fullWidth
           onChange={handleStepOnChange}
           error={!!formErrors.steps[`step_${index}`]}
-          helperText={formErrors.steps[`step_${index}`] ?? ''}
+          helperText={formErrors.steps[`step_${index}`] ?? ""}
         />
       </Grid>
-      <Grid container item xs={2} justifyContent='center'>
+      <Grid container item xs={2} justifyContent="center">
         <IconButton
           onClick={() => handleMoveStepUp(index)}
           disabled={index === 0}

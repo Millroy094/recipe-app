@@ -1,7 +1,8 @@
-import { Grid, Typography } from '@mui/material';
-import AddItemAccordion from '../AddItemAccordion';
-import { FormErrors, Step } from '../type';
-import StepListItem from './StepListItem';
+import { FC } from "react";
+import { Grid, Typography } from "@mui/material";
+import AddItemAccordion from "../AddItemAccordion";
+import { FormErrors, Step } from "../type";
+import StepListItem from "./StepListItem";
 
 interface StepListProps {
   steps: Step[];
@@ -13,7 +14,7 @@ interface StepListProps {
   handleAddStep: () => void;
 }
 
-const StepList = (props: StepListProps) => {
+const StepList: FC<StepListProps> = (props) => {
   const {
     steps,
     formErrors,
@@ -25,14 +26,14 @@ const StepList = (props: StepListProps) => {
   } = props;
   return (
     <AddItemAccordion
-      error={formErrors.steps['steps']}
-      title='Steps'
-      addItemButtonLabel='Add Step'
-      addItemButtonTestId='addStep'
+      error={formErrors.steps["steps"]}
+      title="Steps"
+      addItemButtonLabel="Add Step"
+      addItemButtonTestId="addStep"
       handleAddItem={handleAddStep}
     >
       {steps?.length > 0 ? (
-        <Grid container direction='column' spacing={2}>
+        <Grid container direction="column" spacing={2}>
           {steps.map((step: Step, index: number) => (
             <StepListItem
               key={step.id}
@@ -48,7 +49,7 @@ const StepList = (props: StepListProps) => {
           ))}
         </Grid>
       ) : (
-        <Typography variant='inherit'>
+        <Typography variant="inherit">
           Please press the add button to add a step
         </Typography>
       )}
