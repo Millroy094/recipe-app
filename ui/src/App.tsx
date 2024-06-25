@@ -1,22 +1,22 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
   DefaultOptions,
-} from '@apollo/client';
+} from "@apollo/client";
 
-import { Home } from './pages/Home/Home';
-import MoreInfo from './pages/MoreInfo/MoreInfo';
+import Home from "./pages/Home/Home";
+import MoreInfo from "./pages/MoreInfo/MoreInfo";
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
-    fetchPolicy: 'no-cache',
-    errorPolicy: 'ignore',
+    fetchPolicy: "no-cache",
+    errorPolicy: "ignore",
   },
   query: {
-    fetchPolicy: 'no-cache',
-    errorPolicy: 'all',
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
   },
 };
 
@@ -29,11 +29,11 @@ const client = new ApolloClient({
 const App = () => {
   return (
     <ApolloProvider client={client}>
-      <div className='container'>
+      <div className="container">
         <Router>
           <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/recipe/:id' element={<MoreInfo />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/recipe/:id" element={<MoreInfo />} />
           </Routes>
         </Router>
       </div>

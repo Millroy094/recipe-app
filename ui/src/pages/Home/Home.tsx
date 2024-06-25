@@ -4,14 +4,14 @@ import {
   Container,
   Grid,
   Typography,
-} from '@mui/material';
-import { useLazyQuery, useMutation } from '@apollo/client';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import getRecipesQuery from '../../gql/queries/get-recipes';
-import removeRecipeQuery from '../../gql/mutations/remove-recipe';
-import RecipeListActions from './RecipeListActions';
-import RecipeList from './RecipeList';
+} from "@mui/material";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import getRecipesQuery from "../../gql/queries/get-recipes";
+import removeRecipeQuery from "../../gql/mutations/remove-recipe";
+import RecipeListActions from "./RecipeListActions";
+import RecipeList from "./RecipeList";
 
 interface RecipeListing {
   id: string;
@@ -19,7 +19,7 @@ interface RecipeListing {
   ingredientNames: string[];
 }
 
-export const Home = () => {
+const Home = () => {
   const [recipes, setRecipes] = useState([]);
   const [ingredientOptions, setIngredientOptions] = useState([]);
 
@@ -41,7 +41,7 @@ export const Home = () => {
   const onRemove = async (recipeId: string) => {
     await removeRecipe({ variables: { recipeId } });
     setRecipes(
-      recipes.filter((recipe: RecipeListing) => recipe.id !== recipeId),
+      recipes.filter((recipe: RecipeListing) => recipe.id !== recipeId)
     );
   };
 
@@ -59,8 +59,8 @@ export const Home = () => {
           (ingredients: string[], recipe: RecipeListing) => [
             ...new Set(ingredients.concat(recipe.ingredientNames)),
           ],
-          [],
-        ),
+          []
+        )
       );
 
       setRecipes(getRecipes);
@@ -72,23 +72,23 @@ export const Home = () => {
     return (
       <Box
         sx={{
-          width: '100%',
-          height: '1000px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          width: "100%",
+          height: "1000px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <CircularProgress color='success' />
+        <CircularProgress data-testid="home-progress-bar" color="success" />
       </Box>
     );
   }
 
   return (
-    <Container maxWidth='lg'>
-      <Grid container direction='column' spacing={2}>
-        <Grid container item justifyContent='center'>
-          <Typography variant='h4'>My Favorite Recipes</Typography>
+    <Container maxWidth="lg">
+      <Grid container direction="column" spacing={2}>
+        <Grid container item justifyContent="center">
+          <Typography variant="h4">My Favorite Recipes</Typography>
         </Grid>
         <Grid item>
           <RecipeListActions
@@ -108,3 +108,5 @@ export const Home = () => {
     </Container>
   );
 };
+
+export default Home;
