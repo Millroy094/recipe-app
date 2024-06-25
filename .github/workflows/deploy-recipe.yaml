@@ -89,7 +89,7 @@ jobs:
         working-directory: ./e2e
         run: npm ci
       - name: Cypress run
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v6
         with:
           working-directory: ./e2e
           config: >-
