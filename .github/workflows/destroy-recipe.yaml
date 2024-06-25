@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Configure AWS Credentials
         id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -19,10 +19,10 @@ jobs:
       - name: Setup Open Tofu
         uses: opentofu/setup-opentofu@v1
       - name: Destroy Recipe lambda & website
-        working-directory: './infra'
+        working-directory: "./infra"
         run: |
           tofu init --backend-config="bucket=${{vars.AWS_TERRAFORM_STATE_BUCKET_NAME}}" --backend-config="key=${{vars.AWS_TERRAFORM_STATE_KEY}}.tfstate"
           tofu destroy -auto-approve
         env:
-          TF_VAR_aws_access_key: '${{secrets.AWS_ACCESS_KEY_ID}}'
-          TF_VAR_aws_secret_key: '${{secrets.AWS_SECRET_ACCESS_KEY}}'
+          TF_VAR_aws_access_key: "${{secrets.AWS_ACCESS_KEY_ID}}"
+          TF_VAR_aws_secret_key: "${{secrets.AWS_SECRET_ACCESS_KEY}}"
