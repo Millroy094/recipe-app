@@ -16,9 +16,3 @@ export interface Recipe {
   ingredients: Ingredient[];
   steps: Step[];
 }
-
-export interface FormErrors {
-  name: string;
-  ingredients: Record<string, string>;
-  steps: Record<string, string>;
-}

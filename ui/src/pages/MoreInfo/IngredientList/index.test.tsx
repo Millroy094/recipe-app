@@ -9,7 +9,7 @@ describe('IngredientList', () => {
     render(
       <IngredientList
         ingredients={[]}
-        formErrors={{ name: '', ingredients: {}, steps: {} }}
+        formErrors={[]}
         handleRemoveIngredient={(index: number) => {}}
         handleIngredientOnChange={(
           e: React.ChangeEvent<HTMLInputElement>,
@@ -29,7 +29,7 @@ describe('IngredientList', () => {
           { id: '1', name: 'onion', measure: '1', unit: 'qty' },
           { id: '2', name: 'tomato', measure: '1', unit: 'qty' },
         ]}
-        formErrors={{ name: '', ingredients: {}, steps: {} }}
+        formErrors={[]}
         handleRemoveIngredient={(index: number) => {}}
         handleIngredientOnChange={(
           e: React.ChangeEvent<HTMLInputElement>,

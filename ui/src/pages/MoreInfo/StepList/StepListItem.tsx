@@ -1,15 +1,16 @@
-import { FC } from "react";
-import { Grid, IconButton, TextField } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { FormErrors, Step } from "../type";
+import { FC } from 'react';
+import { Grid, IconButton, TextField } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { Step } from '../type';
+import { getFieldError, isFieldValid } from '../field-errors-utils';
 
 interface StepProps {
   step: Step;
   stepCount: number;
   index: number;
-  formErrors: FormErrors;
+  formErrors: string[];
   handleStepOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleMoveStepUp: (index: number) => void;
   handleMoveStepDown: (index: number) => void;
@@ -37,11 +38,11 @@ const StepListItem: FC<StepProps> = (props) => {
           value={step.step}
           fullWidth
           onChange={handleStepOnChange}
-          error={!!formErrors.steps[`step_${index}`]}
-          helperText={formErrors.steps[`step_${index}`] ?? ""}
+          error={!isFieldValid(`steps[${index}].step`, formErrors)}
+          helperText={getFieldError(`steps[${index}].step`, formErrors, 'step')}
         />
       </Grid>
-      <Grid container item xs={2} justifyContent="center">
+      <Grid container item xs={2} justifyContent='center'>
         <IconButton
           onClick={() => handleMoveStepUp(index)}
           disabled={index === 0}

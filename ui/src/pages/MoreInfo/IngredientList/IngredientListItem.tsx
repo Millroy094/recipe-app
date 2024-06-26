@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 import {
   FormControl,
   FormHelperText,
@@ -10,15 +10,16 @@ import {
   SelectChangeEvent,
   TextField,
   Typography,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { UNITS } from "../../../constants/units";
-import { FormErrors, Ingredient } from "../type";
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { UNITS } from '../../../constants/units';
+import { Ingredient } from '../type';
+import { getFieldError, isFieldValid } from '../field-errors-utils';
 
 interface IngredientItemProps {
   index: number;
   ingredient: Ingredient;
-  formErrors: FormErrors;
+  formErrors: string[];
   handleIngredientOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleIngredientUnitOnChange: (e: SelectChangeEvent<string>) => void;
   handleRemoveIngredient: (index: number) => void;
@@ -39,41 +40,47 @@ const IngredientItem: FC<IngredientItemProps> = (props) => {
         <TextField
           data-testid={`ingredient_${index}_name`}
           name={`${index}_name`}
-          label="Name"
+          label='Name'
           value={ingredient.name}
           fullWidth
           onChange={handleIngredientOnChange}
-          error={!!formErrors.ingredients[`ingredient_${index}_name`]}
-          helperText={formErrors.ingredients[`ingredient_${index}_name`] ?? ""}
+          error={!isFieldValid(`ingredients[${index}].name`, formErrors)}
+          helperText={getFieldError(
+            `ingredients[${index}].name`,
+            formErrors,
+            'name',
+          )}
         />
       </Grid>
       <Grid item xs={4}>
         <TextField
           data-testid={`ingredient_${index}_measure`}
           name={`${index}_measure`}
-          label="Measure"
+          label='Measure'
           value={ingredient.measure}
           fullWidth
           onChange={handleIngredientOnChange}
-          error={!!formErrors.ingredients[`ingredient_${index}_measure`]}
-          helperText={
-            formErrors.ingredients[`ingredient_${index}_measure`] ?? ""
-          }
+          error={!isFieldValid(`ingredients[${index}].measure`, formErrors)}
+          helperText={getFieldError(
+            `ingredients[${index}].measure`,
+            formErrors,
+            'measure',
+          )}
         />
       </Grid>
       <Grid item xs={1}>
         <FormControl fullWidth>
-          <InputLabel id="unit-select-label">Units</InputLabel>
+          <InputLabel id='unit-select-label'>Units</InputLabel>
           <Select
             data-testid={`ingredient_${index}_unit`}
             name={`${index}_unit`}
-            labelId="unit-select-label"
-            label="Units"
-            variant="outlined"
+            labelId='unit-select-label'
+            label='Units'
+            variant='outlined'
             fullWidth
             value={ingredient.unit}
             onChange={handleIngredientUnitOnChange}
-            error={!!formErrors.ingredients[`ingredient_${index}_unit`]}
+            error={!isFieldValid(`ingredients[${index}].unit`, formErrors)}
           >
             {UNITS.map((option) => (
               <MenuItem key={option} value={option}>
@@ -81,16 +88,20 @@ const IngredientItem: FC<IngredientItemProps> = (props) => {
               </MenuItem>
             ))}
           </Select>
-          {formErrors.ingredients[`ingredient_${index}_unit`] && (
+          {!isFieldValid(`ingredients[${index}].unit`, formErrors) && (
             <FormHelperText>
-              <Typography variant="inherit" color="error">
-                {formErrors.ingredients[`ingredient_${index}_unit`]}
+              <Typography variant='inherit' color='error'>
+                {getFieldError(
+                  `ingredients[${index}].unit`,
+                  formErrors,
+                  'unit',
+                )}
               </Typography>
             </FormHelperText>
           )}
         </FormControl>
       </Grid>
-      <Grid container item xs={1} justifyContent="center">
+      <Grid container item xs={1} justifyContent='center'>
         <IconButton onClick={() => handleRemoveIngredient(index)}>
           <DeleteIcon />
         </IconButton>

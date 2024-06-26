@@ -8,7 +8,7 @@ describe('StepList', () => {
     render(
       <StepList
         steps={[]}
-        formErrors={{ name: '', ingredients: {}, steps: {} }}
+        formErrors={[]}
         handleMoveStepUp={(index: number) => {}}
         handleMoveStepDown={(index: number) => {}}
         handleRemoveStep={(index: number) => {}}
@@ -24,7 +24,7 @@ describe('StepList', () => {
     render(
       <StepList
         steps={[{ id: 'step1', step: 'Cut the onion' }]}
-        formErrors={{ name: '', ingredients: {}, steps: {} }}
+        formErrors={[]}
         handleMoveStepUp={(index: number) => {}}
         handleMoveStepDown={(index: number) => {}}
         handleRemoveStep={(index: number) => {}}
