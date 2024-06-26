@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -7,50 +7,29 @@ import {
   Grid,
   SelectChangeEvent,
   TextField,
-} from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
+} from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
 
-import { useNavigate, useParams } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { Ingredient, Recipe, RecipeFormData, Step } from "./type";
+import IngredientList from "./IngredientList";
+import StepList from "./StepList";
+import schema from "./schema";
+import { getFieldError, isFieldValid } from "./field-errors-utils";
 
-import getRecipeQuery from '../../gql/queries/get-recipe';
-import updateRecipeMutation from '../../gql/mutations/update-recipe';
-import addRecipeMutation from '../../gql/mutations/add-recipe';
+const initialFormState = { id: "", name: "", ingredients: [], steps: [] };
 
-import { Ingredient, Recipe, Step } from './type';
-import IngredientList from './IngredientList';
-import StepList from './StepList';
-import schema from './schema';
-import { getFieldError, isFieldValid } from './field-errors-utils';
-
-const initialFormState = { id: '', name: '', ingredients: [], steps: [] };
-
-const MoreInfo: FC<{}> = () => {
+const MoreInfo: FC<{
+  data: any;
+  onSubmit: (formData: RecipeFormData) => Promise<void>;
+  navigateToHome: () => void;
+  submitLabel: string;
+}> = (props) => {
+  const { data, onSubmit, navigateToHome, submitLabel } = props;
   const [form, setForm] = useState<Recipe>(initialFormState);
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
-  const { id } = useParams();
-
-  const isNew = id === 'NEW';
-
-  const navigate = useNavigate();
-
-  const navigateToHome = () => {
-    navigate(`/`);
-  };
-
-  const [updateRecipe] = useMutation(updateRecipeMutation);
-  const [addRecipe] = useMutation(addRecipeMutation);
-
-  const [getRecipe, { loading, data }] = useLazyQuery(getRecipeQuery);
-
   useEffect(() => {
-    getRecipe({ variables: { recipeId: id } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (!loading && data) {
+    if (data) {
       const { getRecipe } = data;
 
       setForm({
@@ -60,7 +39,7 @@ const MoreInfo: FC<{}> = () => {
             (ingredient: { name: string; measure: string; unit: string }) => ({
               ...ingredient,
               id: uuidv4(),
-            }),
+            })
           ),
         ],
 
@@ -72,7 +51,7 @@ const MoreInfo: FC<{}> = () => {
         ],
       });
     }
-  }, [data, loading]);
+  }, [data]);
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -82,7 +61,7 @@ const MoreInfo: FC<{}> = () => {
   };
 
   const handleAddStep = () => {
-    setForm({ ...form, steps: [...form.steps, { id: uuidv4(), step: '' }] });
+    setForm({ ...form, steps: [...form.steps, { id: uuidv4(), step: "" }] });
   };
 
   const handleRemoveStep = (index: number) => {
@@ -134,11 +113,11 @@ const MoreInfo: FC<{}> = () => {
 
   const handleStepOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const [index] = name.split('_');
+    const [index] = name.split("_");
     setForm({
       ...form,
       steps: form.steps.map((step: Step, i: number) =>
-        i === parseInt(index) ? { ...step, step: value } : step,
+        i === parseInt(index) ? { ...step, step: value } : step
       ),
     });
   };
@@ -148,7 +127,7 @@ const MoreInfo: FC<{}> = () => {
       ...form,
       ingredients: [
         ...form.ingredients,
-        { id: uuidv4(), name: '', measure: '', unit: '' },
+        { id: uuidv4(), name: "", measure: "", unit: "" },
       ],
     });
   };
@@ -157,40 +136,40 @@ const MoreInfo: FC<{}> = () => {
     setForm({
       ...form,
       ingredients: form.ingredients.filter(
-        (ingredient: Ingredient, i: number) => i !== index,
+        (ingredient: Ingredient, i: number) => i !== index
       ),
     });
   };
 
   const handleIngredientOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const [index, fieldName] = name.split('_');
+    const [index, fieldName] = name.split("_");
     setForm({
       ...form,
       ingredients: form.ingredients.map((ingredient: Ingredient, i: number) =>
         i === parseInt(index)
           ? { ...ingredient, [fieldName]: value }
-          : ingredient,
+          : ingredient
       ),
     });
   };
 
   const handleIngredientUnitOnChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
-    const [index] = name.split('_');
+    const [index] = name.split("_");
     setForm({
       ...form,
       ingredients: form.ingredients.map((ingredient: Ingredient, i: number) =>
-        i === parseInt(index) ? { ...ingredient, unit: value } : ingredient,
+        i === parseInt(index) ? { ...ingredient, unit: value } : ingredient
       ),
     });
   };
 
-  const onSubmit = async () => {
+  const handleSubmit = async () => {
     try {
       await schema.validate(form, { abortEarly: false });
 
-      const formData = {
+      const formData: RecipeFormData = {
         id: form.id,
         name: form.name,
         ingredients: form.ingredients.map(
@@ -198,24 +177,12 @@ const MoreInfo: FC<{}> = () => {
             name,
             measure,
             unit,
-          }),
+          })
         ),
         steps: [...form.steps.map((step: Step) => step.step)],
       };
-
-      if (isNew) {
-        formData.id = uuidv4();
-        await addRecipe({ variables: { recipeInput: formData } });
-        navigate(`/recipe/${formData.id}`);
-      } else {
-        await updateRecipe({
-          variables: {
-            recipeInput: formData,
-          },
-        });
-      }
+      await onSubmit(formData);
     } catch (err: any) {
-      console.log(err.errors);
       setFormErrors(err.errors);
     }
   };
@@ -223,17 +190,17 @@ const MoreInfo: FC<{}> = () => {
   const { name, ingredients, steps } = form;
 
   return (
-    <Container maxWidth='lg' sx={{ p: 2 }}>
+    <Container maxWidth="lg" sx={{ p: 2 }}>
       <Card sx={{ p: 2 }}>
-        <Grid container spacing={2} direction='column'>
+        <Grid container spacing={2} direction="column">
           <Grid item>
             <TextField
-              data-testid='recipeName'
-              label='Recipe Name'
+              data-testid="recipeName"
+              label="Recipe Name"
               fullWidth
               value={name}
-              error={!isFieldValid('name', formErrors)}
-              helperText={getFieldError('name', formErrors)}
+              error={!isFieldValid("name", formErrors)}
+              helperText={getFieldError("name", formErrors)}
               onChange={onChangeName}
             />
           </Grid>
@@ -260,12 +227,12 @@ const MoreInfo: FC<{}> = () => {
           </Grid>
         </Grid>
         <Divider sx={{ mt: 2, mb: 2 }} />
-        <Grid container spacing={2} justifyContent='flex-end'>
+        <Grid container spacing={2} justifyContent="flex-end">
           <Grid item>
             <Button
-              data-testid='goBack'
-              variant='contained'
-              color='secondary'
+              data-testid="goBack"
+              variant="contained"
+              color="secondary"
               onClick={() => navigateToHome()}
             >
               Go back
@@ -273,12 +240,12 @@ const MoreInfo: FC<{}> = () => {
           </Grid>
           <Grid item>
             <Button
-              data-testid='submitRecipe'
-              variant='contained'
-              color='success'
-              onClick={onSubmit}
+              data-testid="submitRecipe"
+              variant="contained"
+              color="success"
+              onClick={handleSubmit}
             >
-              {isNew ? 'Create' : 'Save'}
+              {submitLabel}
             </Button>
           </Grid>
         </Grid>

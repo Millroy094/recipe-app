@@ -7,8 +7,8 @@ import {
   DefaultOptions,
 } from "@apollo/client";
 
-import Home from "./pages/Home/Home";
-import MoreInfo from "./pages/MoreInfo/MoreInfo";
+import Home from "./pages/Home";
+import MoreInfo from "./pages/MoreInfo";
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {

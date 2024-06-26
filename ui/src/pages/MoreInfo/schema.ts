@@ -1,10 +1,10 @@
-import { object, string, array } from 'yup';
+import { object, string, array } from "yup";
 
 const schema = object({
   name: string().required(),
   steps: array()
     .of(object({ step: string().required() }).required())
-    .min(1, 'You need to enter atleast one step'),
+    .min(1),
   ingredients: array()
     .of(
       object({
@@ -13,9 +13,9 @@ const schema = object({
           .required()
           .matches(/^[\d/.]+$/),
         unit: string().required(),
-      }),
+      })
     )
-    .min(1, 'You need to enter atleast one indredient'),
+    .min(1),
 });
 
 export default schema;

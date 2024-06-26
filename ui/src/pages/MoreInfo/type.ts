@@ -16,3 +16,10 @@ export interface Recipe {
   ingredients: Ingredient[];
   steps: Step[];
 }
+
+export interface RecipeFormData {
+  id: string;
+  name: string;
+  ingredients: Omit<Ingredient, "id">[];
+  steps: string[];
+}

@@ -1,15 +1,5 @@
-import {
-  Box,
-  CircularProgress,
-  Container,
-  Grid,
-  Typography,
-} from "@mui/material";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { Container, Grid, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import getRecipesQuery from "../../gql/queries/get-recipes";
-import removeRecipeQuery from "../../gql/mutations/remove-recipe";
 import RecipeListActions from "./RecipeListActions";
 import RecipeList from "./RecipeList";
 
@@ -19,39 +9,26 @@ interface RecipeListing {
   ingredientNames: string[];
 }
 
-const Home: FC<{}> = () => {
+const Home: FC<{
+  data: any;
+  navigateToRecipePage: (recipeId: string) => void;
+  onSearch: (search: string, ingredients: string[]) => Promise<void>;
+  onRemove: (recipeId: string) => Promise<void>;
+}> = (props) => {
+  const { data, navigateToRecipePage, onSearch, onRemove } = props;
+
   const [recipes, setRecipes] = useState([]);
   const [ingredientOptions, setIngredientOptions] = useState([]);
 
-  const [getRecipes, { loading, data }] = useLazyQuery(getRecipesQuery);
-  const [removeRecipe] = useMutation(removeRecipeQuery);
-
-  const navigate = useNavigate();
-
-  const navigateToRecipePage = (id: string) => {
-    navigate(`/recipe/${id}`);
-  };
-
-  const onSearch = async (search: string, ingredients: string[]) => {
-    await getRecipes({
-      variables: { search, ingredients },
-    });
-  };
-
-  const onRemove = async (recipeId: string) => {
-    await removeRecipe({ variables: { recipeId } });
+  const handleRemove = async (recipeId: string) => {
+    await onRemove(recipeId);
     setRecipes(
       recipes.filter((recipe: RecipeListing) => recipe.id !== recipeId)
     );
   };
 
   useEffect(() => {
-    getRecipes();
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    if (!loading && data) {
+    if (data) {
       const { getRecipes = [] } = data;
 
       setIngredientOptions(
@@ -66,23 +43,7 @@ const Home: FC<{}> = () => {
       setRecipes(getRecipes);
     }
     // eslint-disable-next-line
-  }, [data, loading]);
-
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          height: "1000px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress data-testid="home-progress-bar" color="success" />
-      </Box>
-    );
-  }
+  }, [data]);
 
   return (
     <Container maxWidth="lg">
@@ -100,7 +61,7 @@ const Home: FC<{}> = () => {
         <Grid item>
           <RecipeList
             recipes={recipes}
-            onRemove={onRemove}
+            onRemove={handleRemove}
             navigateToRecipePage={navigateToRecipePage}
           />
         </Grid>

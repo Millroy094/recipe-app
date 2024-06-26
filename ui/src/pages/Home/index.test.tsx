@@ -1,16 +1,9 @@
-import React from "react";
 import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
 
-import Home from "./Home";
+import Home from "./index";
 import getRecipesQuery from "../../gql/queries/get-recipes";
 import removeRecipe from "../../gql/mutations/remove-recipe";
 
@@ -128,9 +121,7 @@ describe.only("Home", () => {
 
     const firstRecipeRemoveButton = screen.getAllByTestId("removeRecipe")[0];
 
-    await act(async () => {
-      fireEvent.click(firstRecipeRemoveButton);
-    });
+    fireEvent.click(firstRecipeRemoveButton);
 
     await waitFor(() => {
       expect(screen.queryByText("Recipe Name: test1")).not.toBeInTheDocument();
