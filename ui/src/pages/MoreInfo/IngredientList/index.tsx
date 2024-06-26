@@ -1,49 +1,59 @@
 import { FC } from "react";
-import { Grid, SelectChangeEvent, Typography } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
+
+import { Grid, Typography } from "@mui/material";
 import AddItemAccordion from "../AddItemAccordion";
-import { Ingredient } from "../type";
 import IngredientListItem from "./IngredientListItem";
-import { getFieldError } from "../field-errors-utils";
+import { isArray, isEmpty } from "lodash";
+import {
+  Control,
+  FieldErrors,
+  useFieldArray,
+  UseFormGetValues,
+  UseFormRegister,
+} from "react-hook-form";
 
 interface IngredientListProps {
-  ingredients: Ingredient[];
-  formErrors: string[];
-  handleIngredientOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleIngredientUnitOnChange: (e: SelectChangeEvent<string>) => void;
-  handleAddIngredient: () => void;
-  handleRemoveIngredient: (index: number) => void;
+  getValues: UseFormGetValues<any>;
+  register: UseFormRegister<any>;
+  control: Control<any>;
+  errors: FieldErrors;
 }
 
 const IngredientList: FC<IngredientListProps> = (
   props: IngredientListProps
 ) => {
-  const {
-    ingredients,
-    formErrors,
-    handleAddIngredient,
-    handleIngredientOnChange,
-    handleIngredientUnitOnChange,
-    handleRemoveIngredient,
-  } = props;
+  const { getValues, register, control, errors } = props;
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "ingredients",
+  });
   return (
     <AddItemAccordion
-      error={getFieldError("ingredients", formErrors, "ingredients")}
+      error={
+        !isEmpty(errors.ingredients) && !isArray(errors.ingredients)
+          ? "Need to add at least one ingredient"
+          : ""
+      }
       title="Ingredients"
       addItemButtonLabel="Add Ingredient"
       addItemButtonTestId="addIngredient"
-      handleAddItem={handleAddIngredient}
+      handleAddItem={() =>
+        append({ id: uuidv4(), name: "", measure: "", unit: "" })
+      }
     >
-      {ingredients?.length > 0 ? (
+      {fields?.length > 0 ? (
         <Grid container direction="column" spacing={2}>
-          {ingredients.map((ingredient: Ingredient, index: number) => (
+          {fields.map((field: any, index: number) => (
             <IngredientListItem
-              key={ingredient.id}
-              ingredient={ingredient}
+              id={field.id}
+              key={field.id}
               index={index}
-              formErrors={formErrors}
-              handleRemoveIngredient={handleRemoveIngredient}
-              handleIngredientOnChange={handleIngredientOnChange}
-              handleIngredientUnitOnChange={handleIngredientUnitOnChange}
+              errors={errors}
+              getValues={getValues}
+              register={register}
+              remove={remove}
             />
           ))}
         </Grid>

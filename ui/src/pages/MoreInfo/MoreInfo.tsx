@@ -5,16 +5,17 @@ import {
   Container,
   Divider,
   Grid,
-  SelectChangeEvent,
   TextField,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
+
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Ingredient, Recipe, RecipeFormData, Step } from "./type";
 import IngredientList from "./IngredientList";
 import StepList from "./StepList";
 import schema from "./schema";
-import { getFieldError, isFieldValid } from "./field-errors-utils";
 
 const initialFormState = { id: "", name: "", ingredients: [], steps: [] };
 
@@ -26,7 +27,18 @@ const MoreInfo: FC<{
 }> = (props) => {
   const { data, onSubmit, navigateToHome, submitLabel } = props;
   const [form, setForm] = useState<Recipe>(initialFormState);
-  const [formErrors, setFormErrors] = useState<string[]>([]);
+
+  const {
+    register,
+    control,
+    getValues,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    //@ts-ignore
+    resolver: yupResolver(schema),
+    values: form,
+  });
 
   useEffect(() => {
     if (data) {
@@ -53,141 +65,21 @@ const MoreInfo: FC<{
     }
   }, [data]);
 
-  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      name: e.target.value,
-    });
-  };
-
-  const handleAddStep = () => {
-    setForm({ ...form, steps: [...form.steps, { id: uuidv4(), step: "" }] });
-  };
-
-  const handleRemoveStep = (index: number) => {
-    setForm({
-      ...form,
-      steps: form.steps.filter((step: Step, i: number) => i !== index),
-    });
-  };
-
-  const handleMoveStepUp = (index: number) => {
-    if (index !== 0) {
-      const previousStep = form.steps[index - 1];
-      const currentStep = form.steps[index];
-
-      setForm({
-        ...form,
-        steps: form.steps.map((step: Step, i: number) => {
-          if (index === i) {
-            return previousStep;
-          } else if (index - 1 === i) {
-            return currentStep;
-          }
-
-          return step;
-        }),
-      });
-    }
-  };
-
-  const handleMoveStepDown = (index: number) => {
-    if (index + 1 < form.steps.length) {
-      const nextStep = form.steps[index + 1];
-      const currentStep = form.steps[index];
-
-      setForm({
-        ...form,
-        steps: form.steps.map((step: Step, i: number) => {
-          if (index === i) {
-            return nextStep;
-          } else if (index + 1 === i) {
-            return currentStep;
-          }
-
-          return step;
-        }),
-      });
-    }
-  };
-
-  const handleStepOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const [index] = name.split("_");
-    setForm({
-      ...form,
-      steps: form.steps.map((step: Step, i: number) =>
-        i === parseInt(index) ? { ...step, step: value } : step
+  const onSubmitSubmitFormData = async (data: any) => {
+    const formData: RecipeFormData = {
+      id: data.id,
+      name: data.name,
+      ingredients: data.ingredients.map(
+        ({ name, measure, unit }: Ingredient) => ({
+          name,
+          measure,
+          unit,
+        })
       ),
-    });
+      steps: [...data.steps.map((step: Step) => step.step)],
+    };
+    await onSubmit(formData);
   };
-
-  const handleAddIngredient = () => {
-    setForm({
-      ...form,
-      ingredients: [
-        ...form.ingredients,
-        { id: uuidv4(), name: "", measure: "", unit: "" },
-      ],
-    });
-  };
-
-  const handleRemoveIngredient = (index: number) => {
-    setForm({
-      ...form,
-      ingredients: form.ingredients.filter(
-        (ingredient: Ingredient, i: number) => i !== index
-      ),
-    });
-  };
-
-  const handleIngredientOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const [index, fieldName] = name.split("_");
-    setForm({
-      ...form,
-      ingredients: form.ingredients.map((ingredient: Ingredient, i: number) =>
-        i === parseInt(index)
-          ? { ...ingredient, [fieldName]: value }
-          : ingredient
-      ),
-    });
-  };
-
-  const handleIngredientUnitOnChange = (e: SelectChangeEvent<string>) => {
-    const { name, value } = e.target;
-    const [index] = name.split("_");
-    setForm({
-      ...form,
-      ingredients: form.ingredients.map((ingredient: Ingredient, i: number) =>
-        i === parseInt(index) ? { ...ingredient, unit: value } : ingredient
-      ),
-    });
-  };
-
-  const handleSubmit = async () => {
-    try {
-      await schema.validate(form, { abortEarly: false });
-
-      const formData: RecipeFormData = {
-        id: form.id,
-        name: form.name,
-        ingredients: form.ingredients.map(
-          ({ name, measure, unit }: Ingredient) => ({
-            name,
-            measure,
-            unit,
-          })
-        ),
-        steps: [...form.steps.map((step: Step) => step.step)],
-      };
-      await onSubmit(formData);
-    } catch (err: any) {
-      setFormErrors(err.errors);
-    }
-  };
-
-  const { name, ingredients, steps } = form;
 
   return (
     <Container maxWidth="lg" sx={{ p: 2 }}>
@@ -198,32 +90,22 @@ const MoreInfo: FC<{
               data-testid="recipeName"
               label="Recipe Name"
               fullWidth
-              value={name}
-              error={!isFieldValid("name", formErrors)}
-              helperText={getFieldError("name", formErrors)}
-              onChange={onChangeName}
+              {...register("name", { required: false })}
+              error={!!errors.name}
+              helperText={errors.name?.message ?? ""}
             />
           </Grid>
           <Grid item>
             <IngredientList
-              ingredients={ingredients}
-              formErrors={formErrors}
-              handleIngredientOnChange={handleIngredientOnChange}
-              handleIngredientUnitOnChange={handleIngredientUnitOnChange}
-              handleAddIngredient={handleAddIngredient}
-              handleRemoveIngredient={handleRemoveIngredient}
+              getValues={getValues}
+              register={register}
+              control={control}
+              errors={errors}
             />
           </Grid>
+
           <Grid item>
-            <StepList
-              steps={steps}
-              formErrors={formErrors}
-              handleAddStep={handleAddStep}
-              handleRemoveStep={handleRemoveStep}
-              handleStepOnChange={handleStepOnChange}
-              handleMoveStepUp={handleMoveStepUp}
-              handleMoveStepDown={handleMoveStepDown}
-            />
+            <StepList register={register} control={control} errors={errors} />
           </Grid>
         </Grid>
         <Divider sx={{ mt: 2, mb: 2 }} />
@@ -243,7 +125,7 @@ const MoreInfo: FC<{
               data-testid="submitRecipe"
               variant="contained"
               color="success"
-              onClick={handleSubmit}
+              onClick={handleSubmit(onSubmitSubmitFormData)}
             >
               {submitLabel}
             </Button>

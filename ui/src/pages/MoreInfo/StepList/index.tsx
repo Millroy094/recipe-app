@@ -1,51 +1,55 @@
 import { FC } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import { Grid, Typography } from "@mui/material";
 import AddItemAccordion from "../AddItemAccordion";
-import { Step } from "../type";
 import StepListItem from "./StepListItem";
-import { getFieldError } from "../field-errors-utils";
+import {
+  Control,
+  FieldErrors,
+  useFieldArray,
+  UseFormRegister,
+} from "react-hook-form";
+import { isArray, isEmpty } from "lodash";
 
 interface StepListProps {
-  steps: Step[];
-  formErrors: string[];
-  handleStepOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleMoveStepUp: (index: number) => void;
-  handleMoveStepDown: (index: number) => void;
-  handleRemoveStep: (index: number) => void;
-  handleAddStep: () => void;
+  register: UseFormRegister<any>;
+  control: Control<any>;
+  errors: FieldErrors;
 }
 
 const StepList: FC<StepListProps> = (props) => {
-  const {
-    steps,
-    formErrors,
-    handleStepOnChange,
-    handleMoveStepUp,
-    handleMoveStepDown,
-    handleRemoveStep,
-    handleAddStep,
-  } = props;
+  const { register, control, errors } = props;
+
+  const { fields, swap, remove, append } = useFieldArray({
+    control,
+    name: "steps",
+  });
+
   return (
     <AddItemAccordion
-      error={getFieldError("steps", formErrors, "steps")}
+      error={
+        !isEmpty(errors.steps) && !isArray(errors.steps)
+          ? "Need to add at least one step"
+          : ""
+      }
       title="Steps"
       addItemButtonLabel="Add Step"
       addItemButtonTestId="addStep"
-      handleAddItem={handleAddStep}
+      handleAddItem={() => append({ id: uuidv4(), step: "" })}
     >
-      {steps?.length > 0 ? (
+      {fields?.length > 0 ? (
         <Grid container direction="column" spacing={2}>
-          {steps.map((step: Step, index: number) => (
+          {fields.map((field: any, index: number) => (
             <StepListItem
-              key={step.id}
+              id={field.id}
+              register={register}
+              key={field.id}
               index={index}
-              step={step}
-              stepCount={steps.length}
-              formErrors={formErrors}
-              handleMoveStepUp={handleMoveStepUp}
-              handleMoveStepDown={handleMoveStepDown}
-              handleRemoveStep={handleRemoveStep}
-              handleStepOnChange={handleStepOnChange}
+              stepCount={fields.length}
+              errors={errors}
+              swap={swap}
+              remove={remove}
             />
           ))}
         </Grid>

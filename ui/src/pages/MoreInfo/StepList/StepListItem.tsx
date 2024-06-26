@@ -1,61 +1,58 @@
-import { FC } from 'react';
-import { Grid, IconButton, TextField } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { Step } from '../type';
-import { getFieldError, isFieldValid } from '../field-errors-utils';
+import { FC } from "react";
+import { Grid, IconButton, TextField } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import {
+  FieldErrors,
+  UseFieldArrayRemove,
+  UseFieldArraySwap,
+  UseFormRegister,
+} from "react-hook-form";
+import { has } from "lodash";
 
 interface StepProps {
-  step: Step;
-  stepCount: number;
+  id: string;
   index: number;
-  formErrors: string[];
-  handleStepOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleMoveStepUp: (index: number) => void;
-  handleMoveStepDown: (index: number) => void;
-  handleRemoveStep: (index: number) => void;
+  errors: FieldErrors;
+  stepCount: number;
+  register: UseFormRegister<any>;
+  swap: UseFieldArraySwap;
+  remove: UseFieldArrayRemove;
 }
 
 const StepListItem: FC<StepProps> = (props) => {
-  const {
-    step,
-    stepCount,
-    index,
-    formErrors,
-    handleStepOnChange,
-    handleMoveStepUp,
-    handleMoveStepDown,
-    handleRemoveStep,
-  } = props;
+  const { register, stepCount, id, index, errors, remove, swap } = props;
   return (
-    <Grid key={step.id} container item>
+    <Grid key={id} container item>
       <Grid item xs={10}>
         <TextField
           data-testid={`step_${index}`}
-          name={`${index}_step`}
           label={`Step ${index + 1}`}
-          value={step.step}
           fullWidth
-          onChange={handleStepOnChange}
-          error={!isFieldValid(`steps[${index}].step`, formErrors)}
-          helperText={getFieldError(`steps[${index}].step`, formErrors, 'step')}
+          {...register(`steps[${index}].step`)}
+          error={has(errors, `steps[${index}].step`)}
+          helperText={
+            has(errors, `steps[${index}].step`)
+              ? "Step description is required"
+              : ""
+          }
         />
       </Grid>
-      <Grid container item xs={2} justifyContent='center'>
+      <Grid container item xs={2} justifyContent="center">
         <IconButton
-          onClick={() => handleMoveStepUp(index)}
+          onClick={() => swap(index, index - 1)}
           disabled={index === 0}
         >
           <ArrowUpwardIcon />
         </IconButton>
         <IconButton
-          onClick={() => handleMoveStepDown(index)}
+          onClick={() => swap(index, index + 1)}
           disabled={index + 1 >= stepCount}
         >
           <ArrowDownwardIcon />
         </IconButton>
-        <IconButton onClick={() => handleRemoveStep(index)}>
+        <IconButton onClick={() => remove(index)}>
           <DeleteIcon />
         </IconButton>
       </Grid>
