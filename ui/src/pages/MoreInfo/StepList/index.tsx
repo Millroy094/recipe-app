@@ -11,20 +11,23 @@ import {
   UseFormRegister,
 } from "react-hook-form";
 import { isArray, isEmpty } from "lodash";
+import { Recipe } from "../type";
 
 interface StepListProps {
-  register: UseFormRegister<any>;
-  control: Control<any>;
+  register: UseFormRegister<Recipe>;
+  control: Control<Recipe>;
   errors: FieldErrors;
 }
 
 const StepList: FC<StepListProps> = (props) => {
   const { register, control, errors } = props;
 
-  const { fields, swap, remove, append } = useFieldArray({
-    control,
-    name: "steps",
-  });
+  const { fields, swap, remove, append } = useFieldArray<Recipe, "steps", "id">(
+    {
+      control,
+      name: "steps",
+    }
+  );
 
   return (
     <AddItemAccordion
