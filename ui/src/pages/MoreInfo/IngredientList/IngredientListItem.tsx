@@ -82,11 +82,9 @@ const IngredientItem: FC<IngredientItemProps> = (props) => {
           </Select>
           {has(errors, `ingredients[${index}].unit`) && (
             <FormHelperText>
-              <Typography variant='inherit' color='error'>
-                {has(errors, `ingredients[${index}].measure`)
-                  ? 'Ingredient unit is required'
-                  : ''}
-              </Typography>
+              {has(errors, `ingredients[${index}].measure`)
+                ? 'Ingredient unit is required'
+                : ''}
             </FormHelperText>
           )}
         </FormControl>

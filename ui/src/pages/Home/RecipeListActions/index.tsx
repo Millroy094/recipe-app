@@ -8,8 +8,8 @@ import {
   Select,
   SelectChangeEvent,
   TextField,
-} from "@mui/material";
-import { FC, useState } from "react";
+} from '@mui/material';
+import { FC, useState } from 'react';
 
 interface RecipeListActionsProps {
   ingredientOptions: string[];
@@ -19,9 +19,9 @@ interface RecipeListActionsProps {
 
 const RecipeListActions: FC<RecipeListActionsProps> = (props) => {
   const { ingredientOptions, navigateToRecipePage, onSearch } = props;
-  const [searchString, setSearchString] = useState("");
+  const [searchString, setSearchString] = useState('');
   const [ingredientsToFilterBy, setIngredientsToFilterBy] = useState<string[]>(
-    []
+    [],
   );
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,9 +37,9 @@ const RecipeListActions: FC<RecipeListActionsProps> = (props) => {
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <TextField
-            data-testid="searchByRecipeName"
-            label="Search by recipe name"
-            variant="outlined"
+            data-testid='searchByRecipeName'
+            label='Search by recipe name'
+            variant='outlined'
             fullWidth
             onChange={onSearchChange}
             value={searchString}
@@ -48,14 +48,14 @@ const RecipeListActions: FC<RecipeListActionsProps> = (props) => {
         {ingredientOptions.length > 0 && (
           <Grid item xs={4}>
             <FormControl fullWidth>
-              <InputLabel id="filter-by-ingredients-label">
+              <InputLabel id='filter-by-ingredients-label'>
                 Filter by Ingredients
               </InputLabel>
               <Select
-                data-testid="filterByIngredients"
-                labelId="filter-by-ingredients-label"
-                label="Filter by Ingredients"
-                variant="outlined"
+                data-testid='filterByIngredients'
+                labelId='filter-by-ingredients-label'
+                label='Filter by Ingredients'
+                variant='outlined'
                 fullWidth
                 multiple
                 value={ingredientsToFilterBy}
@@ -71,23 +71,23 @@ const RecipeListActions: FC<RecipeListActionsProps> = (props) => {
           </Grid>
         )}
       </Grid>
-      <Grid container justifyContent="flex-end" spacing={1}>
+      <Grid container justifyContent='flex-end' spacing={1}>
         <Grid item>
           <Button
-            data-testid="createRecipe"
-            variant="contained"
-            size="large"
-            color="success"
-            onClick={() => navigateToRecipePage("NEW")}
+            data-testid='createRecipe'
+            variant='contained'
+            size='large'
+            color='success'
+            onClick={() => navigateToRecipePage('NEW')}
           >
             Add Recipe
           </Button>
         </Grid>
         <Grid item>
           <Button
-            data-testid="searchRecipe"
-            variant="contained"
-            size="large"
+            data-testid='searchRecipe'
+            variant='contained'
+            size='large'
             onClick={() => onSearch(searchString, ingredientsToFilterBy)}
           >
             Search
