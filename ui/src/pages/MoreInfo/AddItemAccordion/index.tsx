@@ -6,9 +6,9 @@ import {
   Button,
   Grid,
   Typography,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { FC, ReactNode } from "react";
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { FC, ReactNode } from 'react';
 
 interface AddItemAccordionProps {
   addItemButtonLabel: string;
@@ -32,13 +32,13 @@ const AddItemAccordion: FC<AddItemAccordionProps> = (props) => {
     <Accordion defaultExpanded>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
-        aria-controls="accordion-content"
-        id="accordion-header"
+        aria-controls='accordion-content'
+        id='accordion-header'
       >
-        <Grid container direction="column">
-          <Typography variant="h6">{title}</Typography>
+        <Grid container direction='column'>
+          <Typography variant='h6'>{title}</Typography>
           {error && (
-            <Typography variant="subtitle1" color="error">
+            <Typography variant='subtitle1' color='error'>
               {error}
             </Typography>
           )}
@@ -47,8 +47,8 @@ const AddItemAccordion: FC<AddItemAccordionProps> = (props) => {
       <AccordionDetails>{children}</AccordionDetails>
       <AccordionActions>
         <Button
-          variant="contained"
-          color="success"
+          variant='contained'
+          color='success'
           onClick={handleAddItem}
           data-testid={addItemButtonTestId}
         >

@@ -93,7 +93,7 @@ const IngredientItem: FC<IngredientItemProps> = (props) => {
       </Grid>
       <Grid container item xs={1} justifyContent='center'>
         <IconButton
-          data-testId='removeIngredient'
+          data-testid='removeIngredient'
           onClick={() => remove(index)}
         >
           <DeleteIcon />
