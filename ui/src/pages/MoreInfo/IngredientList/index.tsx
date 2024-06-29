@@ -12,12 +12,13 @@ import {
   UseFormGetValues,
   UseFormRegister,
 } from "react-hook-form";
+import { Recipe } from "../type";
 
 interface IngredientListProps {
-  getValues: UseFormGetValues<any>;
-  register: UseFormRegister<any>;
-  control: Control<any>;
-  errors: FieldErrors;
+  getValues: UseFormGetValues<Recipe>;
+  register: UseFormRegister<Recipe>;
+  control: Control<Recipe>;
+  errors: FieldErrors<Recipe>;
 }
 
 const IngredientList: FC<IngredientListProps> = (
@@ -25,10 +26,12 @@ const IngredientList: FC<IngredientListProps> = (
 ) => {
   const { getValues, register, control, errors } = props;
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "ingredients",
-  });
+  const { fields, append, remove } = useFieldArray<Recipe, "ingredients", "id">(
+    {
+      control,
+      name: "ingredients",
+    }
+  );
   return (
     <AddItemAccordion
       error={

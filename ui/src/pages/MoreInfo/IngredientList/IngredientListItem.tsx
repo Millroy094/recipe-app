@@ -18,13 +18,14 @@ import {
   UseFormRegister,
 } from 'react-hook-form';
 import { has } from 'lodash';
+import { Recipe } from '../type';
 
 interface IngredientItemProps {
   id: string;
   index: number;
-  errors: FieldErrors;
-  getValues: UseFormGetValues<any>;
-  register: UseFormRegister<any>;
+  errors: FieldErrors<Recipe>;
+  getValues: UseFormGetValues<Recipe>;
+  register: UseFormRegister<Recipe>;
   remove: UseFieldArrayRemove;
 }
 
@@ -37,7 +38,7 @@ const IngredientItem: FC<IngredientItemProps> = (props) => {
           data-testid={`ingredient_${index}_name`}
           label='Name'
           fullWidth
-          {...register(`ingredients[${index}].name`)}
+          {...register(`ingredients.${index}.name` as const)}
           error={has(errors, `ingredients[${index}].name`)}
           helperText={
             has(errors, `ingredients[${index}].name`)
@@ -51,7 +52,7 @@ const IngredientItem: FC<IngredientItemProps> = (props) => {
           data-testid={`ingredient_${index}_measure`}
           label='Measure'
           fullWidth
-          {...register(`ingredients[${index}].measure`)}
+          {...register(`ingredients.${index}.measure` as const)}
           error={has(errors, `ingredients[${index}].measure`)}
           helperText={
             has(errors, `ingredients[${index}].measure`)
@@ -69,8 +70,8 @@ const IngredientItem: FC<IngredientItemProps> = (props) => {
             label='Units'
             variant='outlined'
             fullWidth
-            {...register(`ingredients[${index}].unit`)}
-            defaultValue={getValues(`ingredients[${index}].unit`)}
+            {...register(`ingredients.${index}.unit` as const)}
+            defaultValue={getValues(`ingredients.${index}.unit` as const)}
             error={has(errors, `ingredients[${index}].unit`)}
           >
             {UNITS.map((option) => (
@@ -80,7 +81,7 @@ const IngredientItem: FC<IngredientItemProps> = (props) => {
             ))}
           </Select>
           {has(errors, `ingredients[${index}].unit`) && (
-            <FormHelperText>
+            <FormHelperText error>
               {has(errors, `ingredients[${index}].measure`)
                 ? 'Ingredient unit is required'
                 : ''}

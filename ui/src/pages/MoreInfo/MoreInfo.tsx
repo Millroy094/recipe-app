@@ -34,7 +34,7 @@ const MoreInfo: FC<{
     getValues,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<Recipe>({
     //@ts-ignore
     resolver: yupResolver(schema),
     values: form,

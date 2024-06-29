@@ -10,13 +10,14 @@ import {
   UseFormRegister,
 } from 'react-hook-form';
 import { has } from 'lodash';
+import { Recipe } from '../type';
 
 interface StepProps {
   id: string;
   index: number;
-  errors: FieldErrors;
+  errors: FieldErrors<Recipe>;
   stepCount: number;
-  register: UseFormRegister<any>;
+  register: UseFormRegister<Recipe>;
   swap: UseFieldArraySwap;
   remove: UseFieldArrayRemove;
 }
@@ -30,7 +31,7 @@ const StepListItem: FC<StepProps> = (props) => {
           data-testid={`step_${index}`}
           label={`Step ${index + 1}`}
           fullWidth
-          {...register(`steps[${index}].step`)}
+          {...register(`steps.${index}.step` as const)}
           error={has(errors, `steps[${index}].step`)}
           helperText={
             has(errors, `steps[${index}].step`)
