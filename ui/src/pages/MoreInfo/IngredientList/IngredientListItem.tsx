@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 import {
   FormControl,
   FormHelperText,
@@ -9,16 +9,16 @@ import {
   Select,
   TextField,
   Typography,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { UNITS } from "../../../constants/units";
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { UNITS } from '../../../constants/units';
 import {
   FieldErrors,
   UseFieldArrayRemove,
   UseFormGetValues,
   UseFormRegister,
-} from "react-hook-form";
-import { has } from "lodash";
+} from 'react-hook-form';
+import { has } from 'lodash';
 
 interface IngredientItemProps {
   id: string;
@@ -36,39 +36,39 @@ const IngredientItem: FC<IngredientItemProps> = (props) => {
       <Grid item xs={6}>
         <TextField
           data-testid={`ingredient_${index}_name`}
-          label="Name"
+          label='Name'
           fullWidth
           {...register(`ingredients[${index}].name`)}
           error={has(errors, `ingredients[${index}].name`)}
           helperText={
             has(errors, `ingredients[${index}].name`)
-              ? "Ingredient name is required"
-              : ""
+              ? 'Ingredient name is required'
+              : ''
           }
         />
       </Grid>
       <Grid item xs={4}>
         <TextField
           data-testid={`ingredient_${index}_measure`}
-          label="Measure"
+          label='Measure'
           fullWidth
           {...register(`ingredients[${index}].measure`)}
           error={has(errors, `ingredients[${index}].measure`)}
           helperText={
             has(errors, `ingredients[${index}].measure`)
-              ? "Ingredient measure is required"
-              : ""
+              ? 'Ingredient measure is required'
+              : ''
           }
         />
       </Grid>
       <Grid item xs={1}>
         <FormControl fullWidth>
-          <InputLabel id="unit-select-label">Units</InputLabel>
+          <InputLabel id='unit-select-label'>Units</InputLabel>
           <Select
             data-testid={`ingredient_${index}_unit`}
-            labelId="unit-select-label"
-            label="Units"
-            variant="outlined"
+            labelId='unit-select-label'
+            label='Units'
+            variant='outlined'
             fullWidth
             {...register(`ingredients[${index}].unit`)}
             defaultValue={getValues(`ingredients[${index}].unit`)}
@@ -82,17 +82,20 @@ const IngredientItem: FC<IngredientItemProps> = (props) => {
           </Select>
           {has(errors, `ingredients[${index}].unit`) && (
             <FormHelperText>
-              <Typography variant="inherit" color="error">
+              <Typography variant='inherit' color='error'>
                 {has(errors, `ingredients[${index}].measure`)
-                  ? "Ingredient unit is required"
-                  : ""}
+                  ? 'Ingredient unit is required'
+                  : ''}
               </Typography>
             </FormHelperText>
           )}
         </FormControl>
       </Grid>
-      <Grid container item xs={1} justifyContent="center">
-        <IconButton onClick={() => remove(index)}>
+      <Grid container item xs={1} justifyContent='center'>
+        <IconButton
+          data-testId='removeIngredient'
+          onClick={() => remove(index)}
+        >
           <DeleteIcon />
         </IconButton>
       </Grid>

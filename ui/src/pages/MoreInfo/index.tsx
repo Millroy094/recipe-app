@@ -1,19 +1,19 @@
-import { FC, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { useNavigate, useParams } from "react-router-dom";
-import { Box, CircularProgress } from "@mui/material";
+import { FC, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Box, CircularProgress } from '@mui/material';
 
-import MoreInfo from "./MoreInfo";
+import MoreInfo from './MoreInfo';
 
-import getRecipeQuery from "../../gql/queries/get-recipe";
-import updateRecipeMutation from "../../gql/mutations/update-recipe";
-import addRecipeMutation from "../../gql/mutations/add-recipe";
-import { RecipeFormData } from "./type";
+import getRecipeQuery from '../../gql/queries/get-recipe';
+import updateRecipeMutation from '../../gql/mutations/update-recipe';
+import addRecipeMutation from '../../gql/mutations/add-recipe';
+import { RecipeFormData } from './type';
 
 const MoreInfoContainer: FC<{}> = () => {
   const { id } = useParams();
-  const isNew = id === "NEW";
+  const isNew = id === 'NEW';
 
   const [getRecipe, { loading, data }] = useLazyQuery(getRecipeQuery);
   const navigate = useNavigate();
@@ -46,14 +46,14 @@ const MoreInfoContainer: FC<{}> = () => {
     return (
       <Box
         sx={{
-          width: "100%",
-          height: "1000px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          width: '100%',
+          height: '1000px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <CircularProgress data-testid="recipe-progress-bar" color="success" />
+        <CircularProgress data-testid='recipe-progress-bar' color='success' />
       </Box>
     );
   }
@@ -63,7 +63,7 @@ const MoreInfoContainer: FC<{}> = () => {
       data={data}
       onSubmit={onSubmit}
       navigateToHome={navigateToHome}
-      submitLabel={isNew ? "Create" : "Save"}
+      submitLabel={isNew ? 'Create' : 'Save'}
     />
   );
 };

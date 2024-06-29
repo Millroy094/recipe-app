@@ -1,15 +1,15 @@
-import { FC } from "react";
-import { Grid, IconButton, TextField } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { FC } from 'react';
+import { Grid, IconButton, TextField } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import {
   FieldErrors,
   UseFieldArrayRemove,
   UseFieldArraySwap,
   UseFormRegister,
-} from "react-hook-form";
-import { has } from "lodash";
+} from 'react-hook-form';
+import { has } from 'lodash';
 
 interface StepProps {
   id: string;
@@ -34,12 +34,12 @@ const StepListItem: FC<StepProps> = (props) => {
           error={has(errors, `steps[${index}].step`)}
           helperText={
             has(errors, `steps[${index}].step`)
-              ? "Step description is required"
-              : ""
+              ? 'Step description is required'
+              : ''
           }
         />
       </Grid>
-      <Grid container item xs={2} justifyContent="center">
+      <Grid container item xs={2} justifyContent='center'>
         <IconButton
           onClick={() => swap(index, index - 1)}
           disabled={index === 0}
@@ -52,7 +52,7 @@ const StepListItem: FC<StepProps> = (props) => {
         >
           <ArrowDownwardIcon />
         </IconButton>
-        <IconButton onClick={() => remove(index)}>
+        <IconButton data-testid='removeStep' onClick={() => remove(index)}>
           <DeleteIcon />
         </IconButton>
       </Grid>
