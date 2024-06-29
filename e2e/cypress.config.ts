@@ -4,6 +4,7 @@ import plugins from './cypress/plugins';
 export default defineConfig({
   experimentalStudio: true,
   e2e: {
+    defaultCommandTimeout: 10000,
     baseUrl: 'http://localhost:3000',
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
