@@ -5,7 +5,7 @@ import * as router from 'react-router';
 import { MockedProvider } from '@apollo/client/testing';
 import MoreInfo from './index';
 
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 describe('MoreInfo', () => {
   it('Renders MoreInfo component with empty fields for new recipe', async () => {
@@ -104,51 +104,41 @@ describe('MoreInfo', () => {
       id: 'NEW',
     });
 
-    act(() => {
-      render(
-        <MemoryRouter initialEntries={['/recipe/NEW']}>
-          <MockedProvider mocks={[]} addTypename={false}>
-            <MoreInfo />
-          </MockedProvider>
-        </MemoryRouter>,
-      );
-    });
+    render(
+      <MemoryRouter initialEntries={['/recipe/NEW']}>
+        <MockedProvider mocks={[]} addTypename={false}>
+          <MoreInfo />
+        </MockedProvider>
+      </MemoryRouter>,
+    );
 
-    act(() => {
-      fireEvent.click(
-        screen.getByRole('button', {
-          name: /add ingredient/i,
-        }),
-      );
-    });
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: /add ingredient/i,
+      }),
+    );
 
     expect(() => screen.getByTestId('removeIngredient')).not.toThrow(
       'Unable to find an element by: [data-testid="removeIngredient"]',
     );
 
-    act(() => {
-      fireEvent.click(
-        screen.getByRole('button', {
-          name: /add step/i,
-        }),
-      );
-    });
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: /add step/i,
+      }),
+    );
 
     expect(() => screen.getByTestId('removeStep')).not.toThrow(
       'Unable to find an element by: [data-testid="removeStep"]',
     );
 
-    act(() => {
-      fireEvent.click(screen.getByTestId('removeIngredient'));
-    });
+    fireEvent.click(screen.getByTestId('removeIngredient'));
 
     expect(() => screen.getByTestId('removeIngredient')).toThrow(
       'Unable to find an element by: [data-testid="removeIngredient"]',
     );
 
-    act(() => {
-      fireEvent.click(screen.getByTestId('removeStep'));
-    });
+    fireEvent.click(screen.getByTestId('removeStep'));
 
     expect(() => screen.getByTestId('removeStep')).toThrow(
       'Unable to find an element by: [data-testid="removeStep"]',
