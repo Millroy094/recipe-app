@@ -25,7 +25,8 @@
     "graphql-scalars": "^1.23.0",
     "reflect-metadata": "^0.2.2",
     "serverless-express": "^2.0.12",
-    "type-graphql": "^2.0.0-rc.1"
+    "type-graphql": "^2.0.0-rc.1",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.140",
