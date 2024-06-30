@@ -2,7 +2,6 @@ import { FC, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, CircularProgress } from '@mui/material';
 
 import MoreInfo from './MoreInfo';
 
@@ -10,6 +9,7 @@ import getRecipeQuery from '../../gql/queries/get-recipe';
 import updateRecipeMutation from '../../gql/mutations/update-recipe';
 import addRecipeMutation from '../../gql/mutations/add-recipe';
 import { RecipeFormData } from './type';
+import LoadingScreen from './LoadingScreen';
 
 const MoreInfoContainer: FC<{}> = () => {
   const { id } = useParams();
@@ -43,19 +43,7 @@ const MoreInfoContainer: FC<{}> = () => {
   }, []);
 
   if (loading) {
-    return (
-      <Box
-        sx={{
-          width: '100%',
-          height: '1000px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <CircularProgress data-testid='recipe-progress-bar' color='success' />
-      </Box>
-    );
+    return <LoadingScreen />;
   }
 
   return (

@@ -4,7 +4,7 @@ import { Recipe, RecipeInput, RecipeFilters } from './recipe.type';
 import { RecipeModel } from '../models';
 import { GraphQLError } from 'graphql';
 import { prepareRecipeInputForDb } from './utils';
-import logger from '../logger';
+import logger from '../utils/logger';
 
 interface filterCondition {
   name?: { contains: string };

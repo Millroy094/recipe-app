@@ -1,12 +1,12 @@
-import { FC, useEffect } from "react";
-import Home from "./Home";
-import { Box, CircularProgress } from "@mui/material";
+import { FC, useEffect } from 'react';
+import Home from './Home';
 
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 
-import getRecipesQuery from "../../gql/queries/get-recipes";
-import removeRecipeQuery from "../../gql/mutations/remove-recipe";
+import getRecipesQuery from '../../gql/queries/get-recipes';
+import removeRecipeQuery from '../../gql/mutations/remove-recipe';
+import LoadingScreen from './LoadingScreen';
 
 const HomeContainer: FC<{}> = () => {
   const [getRecipes, { loading, data }] = useLazyQuery(getRecipesQuery);
@@ -34,19 +34,7 @@ const HomeContainer: FC<{}> = () => {
   };
 
   if (loading) {
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          height: "1000px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress data-testid="home-progress-bar" color="success" />
-      </Box>
-    );
+    return <LoadingScreen />;
   }
 
   return (

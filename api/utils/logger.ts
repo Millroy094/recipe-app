@@ -5,13 +5,14 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.Console({
       format: winston.format.combine(
-        winston.format.timestamp(),
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         winston.format.printf(({ level, message, timestamp, stack }) => {
           if (stack) {
             return `${timestamp} [${level.toLocaleUpperCase()}]: ${message} - ${stack}`;
           }
           return `${timestamp} [${level.toUpperCase()}]: ${message}`;
         }),
+        winston.format.colorize({ all: true }),
       ),
     }),
   ],
